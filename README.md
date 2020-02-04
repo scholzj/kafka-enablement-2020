@@ -9,3 +9,10 @@ Following demos are included:
     * Console producer
     * Management tools
     * Connect standalone
+* [Kafka Architecture](./kafka-architecture)
+    * Topics
+    * Partitions
+    * Replicas
+    * Consumers
+    * Producers
+    * Consumer Groups

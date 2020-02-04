@@ -1,2 +1,8 @@
 **/*.log
 **/*.log.*
+*.pem
+*.crt
+*.csr
+*.keystore
+*.p12
+truststore

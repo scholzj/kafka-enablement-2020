@@ -1,0 +1,23 @@
+{
+   "CN": "connect-1",
+   "hosts": [
+        "localhost",
+        "JAkub-MBP",
+        "kafka-int",
+        "kafka-ext",
+        "jscholz",
+        "jscholz.remote.csb",
+        "127.0.0.1"        
+    ],
+   "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "CZ",
+            "L": "Prague",
+            "O": "MyOrg"
+        }
+    ]
+}
