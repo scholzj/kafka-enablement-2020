@@ -3,6 +3,8 @@
 This demo contains simple financial application based on events and stream processing.
 It uses Kafka and runs in OCP using Strimzi / AMQ Streams.
 
+![Schema](./schema.png)
+
 ## Setup
 
 ### Build
