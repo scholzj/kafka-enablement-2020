@@ -96,7 +96,7 @@ ls /brokers/topics
 echo dump | nc localhost 2181
 ```
 
-* Kill one of the brokers and show how it disappers
+* Kill one of the brokers and show how it disappears
 
 ```
 echo dump | nc localhost 2181
@@ -107,14 +107,14 @@ echo dump | nc localhost 2181
 ### Create topic
 
 ```
-bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 3
+./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 3
 ```
 
 ### Check the created topic
 
 ```
-bin/kafka-topics.sh --bootstrap-server localhost:9092 --list --topic demo
-bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
+./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list --topic demo
+./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
 ```
 
 Notice the distribution of leaders and the ISR replicas. Explain also the RackID feature.
@@ -122,7 +122,7 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 ### Send some messages
 
 ```
-bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
+./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
 ```
 
 ### Consume messages
@@ -130,19 +130,19 @@ bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
 * Read from the whole topic
 
 ```
-bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning
 ```
 
 * Notice how the messages are out of order. And check how nicely ordered they are in a single partition.
 
 ```
-bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --from-beginning
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --from-beginning
 ```
 
 * Show reading from a particular offset
 
 ```
-bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --offset 2
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --offset 2
 ```
 
 ## Replication
@@ -153,7 +153,7 @@ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --p
 * Show again the topic description with the leaders which changed and new ISR
 
 ```
-bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
+./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
 ```
 
 ### Consume messages
@@ -161,13 +161,13 @@ bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
 * Show that the messages are still in the topic!
 
 ```
-bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning
 ```
 
 ### Send some messages
 
 ```
-bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
+./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
 ```
 
 ### Start the broker again
@@ -181,8 +181,8 @@ bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
 ### Create a new topic to get rid of the old messages
 
 ```
-bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --delete --topic demo
-bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 3
+./kafka-2.4.0/bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --delete --topic demo
+./kafka-2.4.0/bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 3
 ```
 
 ### Setup consumers
@@ -190,13 +190,13 @@ bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --create --top
 * Open 3 consumers using the same group `group-1`
 
 ```
-bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning --property print.key=true --property key.separator=":" --group group-1
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning --property print.key=true --property key.separator=":" --group group-1
 ```
 
 * Open consumer using a different group `group-2`
 
 ```
-bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group group-2
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group group-2
 ```
 
 ### Send messages
@@ -204,7 +204,7 @@ bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --f
 * Send some messages with keys
 
 ```
-bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo --property "parse.key=true" --property "key.separator=:"
+./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo --property "parse.key=true" --property "key.separator=:"
 ```
 
 ### Rebalancing consumer group

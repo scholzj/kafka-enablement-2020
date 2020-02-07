@@ -6,3 +6,7 @@
 *.keystore
 *.p12
 truststore
+*.properties.dynamic.next
+*.iml
+.idea
+*/target
