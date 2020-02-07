@@ -1,0 +1,14 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  name: price-feed-connector
+  labels:
+    strimzi.io/cluster: my-connect-cluster
+spec:
+  class: PriceFeedConnector
+  tasksMax: 1
+  config:
+    frequency: 2
+    topic: prices
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.converters.FloatConverter

@@ -1,0 +1,98 @@
+###########
+# UI Price Viewer
+###########
+
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaUser
+metadata:
+  name: ui-price-viewer
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+    - resource:
+        type: topic
+        name: prices
+      operation: Read
+    - resource:
+        type: topic
+        name: prices
+      operation: Describe
+    - resource:
+        type: group
+        name: ui-price-viewer
+        patternType: prefix
+      operation: Read
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: ui-price-viewer
+  name: ui-price-viewer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ui-price-viewer
+    spec:
+      containers:
+      - name: ui-price-viewer
+        image: quay.io/kafka-enablement-2020/event-driven:ui-price-viewer
+        env:
+        - name: CA_CRT
+          valueFrom:
+            secretKeyRef:
+              name: my-cluster-cluster-ca-cert
+              key: ca.crt
+        - name: USER_CRT
+          valueFrom:
+            secretKeyRef:
+              name: ui-price-viewer
+              key: user.crt
+        - name: USER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ui-price-viewer
+              key: user.key
+        - name: BOOTSTRAP_SERVERS
+          value: my-cluster-kafka-bootstrap:9093
+        - name: TOPIC
+          value: prices
+        - name: GROUP_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui-price-viewer
+  labels:
+    app: ui-price-viewer
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+  selector:
+    app: ui-price-viewer
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ui-price-viewer
+  labels:
+    app: ui-price-viewer
+spec:
+  to:
+    kind: Service
+    name: ui-price-viewer

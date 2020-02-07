@@ -1,0 +1,223 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaTopic
+metadata:
+  name: portfolio
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  partitions: 3
+  replicas: 3
+  config:
+    cleanup.policy: compact
+    retention.bytes: 107374182
+    retention.ms: 86400000
+    segment.bytes: 107374182
+---
+
+#########
+# Prices -> Agregates and evaluates the portfolio
+#########
+
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaUser
+metadata:
+  name: pricer
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+    - resource:
+        type: topic
+        name: portfolio
+      operation: Write
+    - resource:
+        type: topic
+        name: portfolio
+      operation: Describe
+    - resource:
+        type: topic
+        name: prices
+      operation: Read
+    - resource:
+        type: topic
+        name: prices
+      operation: Describe
+    - resource:
+        type: topic
+        name: trades
+      operation: Read
+    - resource:
+        type: topic
+        name: trades
+      operation: Describe
+    - resource:
+        type: topic
+        name: pricer
+        patternType: prefix
+      operation: Write
+    - resource:
+        type: topic
+        name: pricer
+        patternType: prefix
+      operation: Create
+    - resource:
+        type: topic
+        name: pricer
+        patternType: prefix
+      operation: Read
+    - resource:
+        type: topic
+        name: pricer
+        patternType: prefix
+      operation: Describe
+    - resource:
+        type: group
+        name: pricer
+        patternType: prefix
+      operation: Read
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: pricer
+  name: pricer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pricer
+    spec:
+      containers:
+      - name: pricer
+        image: quay.io/kafka-enablement-2020/event-driven:pricer
+        env:
+        - name: CA_CRT
+          valueFrom:
+            secretKeyRef:
+              name: my-cluster-cluster-ca-cert
+              key: ca.crt
+        - name: USER_CRT
+          valueFrom:
+            secretKeyRef:
+              name: pricer
+              key: user.crt
+        - name: USER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: pricer
+              key: user.key
+        - name: BOOTSTRAP_SERVERS
+          value: my-cluster-kafka-bootstrap:9093
+        - name: LEFT_SOURCE_TOPIC
+          value: trades
+        - name: RIGHT_SOURCE_TOPIC
+          value: prices
+        - name: TARGET_TOPIC
+          value: portfolio
+---
+
+#########
+# Priced protfolio viewer
+#########
+
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaUser
+metadata:
+  name: ui-portfolio-viewer
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  authentication:
+    type: tls
+  authorization:
+    type: simple
+    acls:
+    - resource:
+        type: topic
+        name: portfolio
+      operation: Read
+    - resource:
+        type: topic
+        name: portfolio
+      operation: Describe
+    - resource:
+        type: group
+        name: ui-portfolio-viewer
+        patternType: prefix
+      operation: Read
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: ui-portfolio-viewer
+  name: ui-portfolio-viewer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ui-portfolio-viewer
+    spec:
+      containers:
+      - name: ui-portfolio-viewer
+        image: quay.io/kafka-enablement-2020/event-driven:ui-portfolio-viewer
+        env:
+        - name: CA_CRT
+          valueFrom:
+            secretKeyRef:
+              name: my-cluster-cluster-ca-cert
+              key: ca.crt
+        - name: USER_CRT
+          valueFrom:
+            secretKeyRef:
+              name: ui-portfolio-viewer
+              key: user.crt
+        - name: USER_KEY
+          valueFrom:
+            secretKeyRef:
+              name: ui-portfolio-viewer
+              key: user.key
+        - name: BOOTSTRAP_SERVERS
+          value: my-cluster-kafka-bootstrap:9093
+        - name: TOPIC
+          value: portfolio
+        - name: GROUP_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui-portfolio-viewer
+  labels:
+    app: ui-portfolio-viewer
+spec:
+  type: ClusterIP
+  ports:
+   - name: http
+     port: 8080
+  selector:
+    app: ui-portfolio-viewer
+---
+
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: ui-portfolio-viewer
+  labels:
+    app: ui-portfolio-viewer
+spec:
+  to:
+    kind: Service
+    name: ui-portfolio-viewer

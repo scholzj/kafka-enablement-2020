@@ -1,0 +1,19 @@
+DOCKERFILE_DIR     ?= ./
+DOCKER_REGISTRY    ?= quay.io
+DOCKER_ORG         ?= kafka-enablement-2020
+DOCKER_REPOSITORY  ?= event-driven
+DOCKER_VERSION_ARG ?= latest
+
+all: docker_build docker_push
+
+docker_build:
+	echo "Building Docker image ..."
+	docker build --build-arg version=$(DOCKER_VERSION_ARG) -t $(DOCKER_ORG)/$(DOCKER_REPOSITORY):$(PROJECT_NAME) $(DOCKERFILE_DIR)
+
+docker_tag:
+	echo "Tagging $(DOCKER_ORG)/$(DOCKER_REPOSITORY):$(PROJECT_NAME) to $(DOCKER_REGISTRY)/$(DOCKER_ORG)/$(DOCKER_REPOSITORY):$(PROJECT_NAME) ..."
+	docker tag $(DOCKER_ORG)/$(DOCKER_REPOSITORY):$(PROJECT_NAME) $(DOCKER_REGISTRY)/$(DOCKER_ORG)/$(DOCKER_REPOSITORY):$(PROJECT_NAME)
+
+docker_push: docker_tag
+	echo "Pushing $(DOCKER_REGISTRY)/$(DOCKER_ORG)/$(DOCKER_REPOSITORY):$(PROJECT_NAME) ..."
+	docker push $(DOCKER_REGISTRY)/$(DOCKER_ORG)/$(DOCKER_REPOSITORY):$(PROJECT_NAME)
