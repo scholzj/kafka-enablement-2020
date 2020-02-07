@@ -211,55 +211,55 @@ bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo --proper
 
 * Kill one of the consumers started before
 * Send some messages with the same key as was used before for this consumer
-* Show that one fo the other consumers got the partition assigned and will receive it
+* Show that one of the other consumers got the partition assigned and will receive it
 
+## Security
 
+### Configuration
 
+Check the configuration of the brokers related to the TLS & SASL.
 
+### SSL Consumers and Producers
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## Kafka Connect
-
-* Show Kafka connect configuration files
-* Show the plugin path and explain how it works
-* Show basics of the rest interface
+Use SSL to producer messages:
 
 ```
-curl -s http://localhost:8083/ | jq
-curl -s http://localhost:8083/connectors | jq
-curl -s http://localhost:8083/connector-plugins | jq
+./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:19092 \
+      --topic demo \
+      --producer-property security.protocol=SSL \
+      --producer-property ssl.truststore.password=123456 \
+      --producer-property ssl.truststore.location=./ssl/keys/truststore \
+      --consumer-property ssl.keystore.password=123456 \
+      --consumer-property ssl.keystore.location=./ssl/keys/user1.keystore
 ```
 
+And consume them:
 
+```
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:19092 \
+      --topic demo --from-beginning \
+      --consumer-property security.protocol=SSL \
+      --consumer-property ssl.truststore.password=123456 \
+      --consumer-property ssl.truststore.location=./ssl/keys/truststore \
+      --consumer-property ssl.keystore.password=123456 \
+      --consumer-property ssl.keystore.location=./ssl/keys/user1.keystore
+```
 
+### SASL Consumers and Producers
 
+Check the `sasl-client.properties` file  which configures SASL PLAIN authentication 
+Try to producer some messages:
+
+```
+./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:39092 \
+      --topic demo \
+      --producer.config sasl-client.properties
+```
+
+And consume them:
+
+```
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:39092 \
+      --topic demo --from-beginning \
+      --consumer.config sasl-client.properties
+```
