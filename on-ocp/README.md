@@ -4,7 +4,6 @@
 
 This demo expects you to have an OCP cluster with OCP 3.11 or higher.
 Normally it is executed against OCP 4 running on AWS.
-The OperatorHub part requires OCP4.
 It expects to be executed against the namespace `myproject`
 
 ```
