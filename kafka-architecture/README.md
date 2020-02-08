@@ -239,6 +239,12 @@ Reset the offset to 0:
 /kafka-2.4.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --to-earliest --group replay-group --topic demo --execute
 ```
 
+Try to consume the messages again - you should receive them from the beginning of the topic:
+
+```
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group replay-group
+```
+
 ## Security
 
 ### Configuration
