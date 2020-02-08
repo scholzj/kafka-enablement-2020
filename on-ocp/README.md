@@ -78,8 +78,6 @@ oc get kt my-topic2 -o yaml
 
 ## Using the User operator
 
-TODO: Qoutes
-
 Check the user resource in `04-user.yaml`.
 Use it to create user:
 
@@ -87,6 +85,8 @@ Use it to create user:
 oc apply -f 04-user.yaml
 ```
 
+Check the specification of the KafkaUser resource.
+Notice the authN type, authZ and quotas configuration.
 And check the secrets it created with the TLs certificate:
 
 ```

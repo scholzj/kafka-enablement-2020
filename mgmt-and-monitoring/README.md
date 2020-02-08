@@ -7,6 +7,17 @@
 Setup and start the Zookeeper and Kafka cluster from the [Kafka Architecture demo](../kafka-architecture/).
 This cluster will be used for the first part of this demo. 
 
+### Topics
+
+We already used a lot of commands.
+You can also use the script to show only some topics in _troubles_:
+
+```
+./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe
+./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --under-replicated-partitions
+./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --unavailable-partitions
+```
+
 ### Consumer groups
 
 `kafka-consumer-groups.sh` lets you manage and monitor consumer groups:
@@ -38,6 +49,37 @@ Reset the offset to last message:
 Try other options as well:
 * specific offset
 * specific time
+
+### Topic Reassignments
+
+First we create a new topic which we will be later reassigning:
+
+```
+kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic reassignment-topic --partitions 1 --replication-factor 1
+```
+
+Next, we generate reassignment file.
+Check the `topics-to-move.json` file which tells the toolfor which topics should the file be generated.
+
+```
+./kafka-2.4.0/bin/kafka-reassign-partitions.sh --zookeeper localhost:2181 \
+  --topics-to-move-json-file topics-to-move.json \
+  --broker-list 0,1,2 \
+  --generate
+```
+
+Next we can use the prepared file to trigger the reassignment.
+You can throttle the reassignment process to avoid affecting other workloads.
+This command needs to write into Zookeeper.
+So it needs to authenticate first.
+
+```
+export KAFKA_OPTS="-Djava.security.auth.login.config=../kafka-architecture/configs/kafka/jaas.config"
+./kafka-2.4.0/bin/kafka-reassign-partitions.sh --zookeeper localhost:2181 \
+  --reassignment-json-file reassign-partition.json \
+  --throttle 5000000 \
+  --execute
+```
 
 ## Admin API
 
