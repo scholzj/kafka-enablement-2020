@@ -1,0 +1,15 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  name: telegram-connector
+  labels:
+    strimzi.io/cluster: my-connect-cluster
+spec:
+  class: org.apache.camel.kafkaconnector.CamelSourceConnector
+  tasksMax: 1
+  config:
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.storage.StringConverter
+    camel.source.kafka.topic: telegram-topic
+    camel.source.url: telegram:bots
+    camel.component.telegram.authorizationToken: ${file:/opt/kafka/external-configuration/telegram-credentials/telegram-credentials.properties:token}

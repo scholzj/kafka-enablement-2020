@@ -1,0 +1,18 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  name: s3-connector
+  labels:
+    strimzi.io/cluster: my-connect-cluster
+spec:
+  class: org.apache.camel.kafkaconnector.CamelSourceConnector
+  tasksMax: 1
+  config:
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.storage.StringConverter
+    camel.source.kafka.topic: s3-topic
+    camel.source.url: aws-s3://camel-connector-test?autocloseBody=false
+    camel.source.maxPollDuration: 10000
+    camel.component.aws-s3.configuration.access-key: ${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws.access-key}
+    camel.component.aws-s3.configuration.secret-key: ${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws.secret-key}
+    camel.component.aws-s3.configuration.region: ${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws.region}
