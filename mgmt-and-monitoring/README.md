@@ -83,7 +83,8 @@ export KAFKA_OPTS="-Djava.security.auth.login.config=../kafka-architecture/confi
 
 ## Admin API
 
-TODO
+The Admin APi client can be found in `admin-api`.
+Go through it in IDE.
 
 ## Metrics
 
