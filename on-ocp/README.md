@@ -78,6 +78,8 @@ oc get kt my-topic2 -o yaml
 
 ## Using the User operator
 
+TODO: Qoutes
+
 Check the user resource in `04-user.yaml`.
 Use it to create user:
 

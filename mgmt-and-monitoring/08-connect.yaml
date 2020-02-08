@@ -1,0 +1,54 @@
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnect
+metadata:
+  name: my-connect-cluster
+  labels:
+    app: my-connect-cluster
+  annotations:
+    strimzi.io/use-connector-resources: "true"
+spec:
+  replicas: 1
+  bootstrapServers: my-cluster-kafka-bootstrap:9092
+  config:
+    config.storage.replication.factor: 3
+    offset.storage.replication.factor: 3
+    status.storage.replication.factor: 3
+    key.converter: org.apache.kafka.connect.storage.StringConverter
+    value.converter: org.apache.kafka.connect.storage.StringConverter
+    key.converter.schemas.enable: false
+    value.converter.schemas.enable: false
+  metrics:
+    lowercaseOutputName: true
+    lowercaseOutputLabelNames: true
+    rules:
+    - pattern : "kafka.connect<type=connect-worker-metrics>([^:]+):"
+      name: "kafka_connect_connect_worker_metrics_$1"
+    - pattern : "kafka.connect<type=connect-metrics, client-id=([^:]+)><>([^:]+)"
+      name: "kafka_connect_connect_metrics_$1_$2"
+  tracing:
+    type: jaeger
+  template:
+    connectContainer:
+      env:
+        - name: JAEGER_SERVICE_NAME
+          value: my-connect-cluster
+        - name: JAEGER_AGENT_HOST
+          value: my-jaeger-agent
+        - name: JAEGER_SAMPLER_TYPE
+          value: const
+        - name: JAEGER_SAMPLER_PARAM
+          value: "1"
+---
+
+apiVersion: kafka.strimzi.io/v1alpha1
+kind: KafkaConnector
+metadata:
+  name: file-sink-connector
+  labels:
+    strimzi.io/cluster: my-connect-cluster
+spec:
+  class: FileStreamSink
+  tasksMax: 3
+  config:
+    file: "/tmp/test.sink.txt"
+    topics: "my-topic"

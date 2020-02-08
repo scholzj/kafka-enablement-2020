@@ -17,7 +17,6 @@ spec:
     jvmOptions:
       -Xms: 1024m
       -Xmx: 1024m
-      gcLoggingEnabled: false
     listeners:
       plain: {}
       tls:
@@ -50,8 +49,6 @@ spec:
       type: persistent-claim
       size: 100Gi
       deleteClaim: true
-    jvmOptions:
-      gcLoggingEnabled: false
   entityOperator:
     topicOperator:
       resources:
@@ -61,8 +58,6 @@ spec:
         limits:
           memory: 256Mi
           cpu: "0.5"
-      jvmOptions:
-        gcLoggingEnabled: false
     userOperator:
       resources:
         requests:
@@ -71,5 +66,3 @@ spec:
         limits:
           memory: 256Mi
           cpu: "0.5"
-      jvmOptions:
-        gcLoggingEnabled: false
