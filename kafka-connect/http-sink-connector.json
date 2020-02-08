@@ -1,0 +1,11 @@
+{ 
+    "name": "post-bin-sink", 
+    "config": { 
+        "connector.class": "org.apache.camel.kafkaconnector.CamelSinkConnector", 
+        "tasks.max": "1", 
+        "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+        "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+        "camel.sink.url": "https://postb.in/1581199821951-0820564175955",
+        "topics": "my-topic"
+    } 
+}

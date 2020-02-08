@@ -2,8 +2,22 @@
 
 ## On RHEL
 
+Setup and start the Zookeeper and Kafka cluster from the [Kafka Architecture demo](../kafka-architecture/).
+This cluster will be used for the first part of this demo. 
 
-## Kafka Connect
+### Start Kafka Connect cluster
+
+The introduction demo showed standalone Kafka Connect.
+Now we are going to use distributed Kafka Connect with 3 worker nodes.
+Start the 3 Kafka nodes by running these 3 scripts in different terminals:
+
+```
+./scripts/connect-0.sh
+./scripts/connect-1.sh
+./scripts/connect-2.sh
+```
+
+### Kafka Connect
 
 * Show Kafka connect configuration files
 * Show the plugin path and explain how it works
@@ -14,6 +28,54 @@ curl -s http://localhost:8083/ | jq
 curl -s http://localhost:8083/connectors | jq
 curl -s http://localhost:8083/connector-plugins | jq
 ```
+
+### Deploy CamelSink plugin
+
+Go to [https://postb.in/](https://postb.in/) and create a new bin.
+Copy the URL and paster it in `http-sink-connector.json` into `camel.sink.url` option.
+And create the connector:
+
+```
+curl -X POST -H "Content-Type: application/json" -d @http-sink-connector.json http://localhost:8083/connectors | jq
+```
+
+Check the connector status:
+
+```
+curl -s http://localhost:8083/connectors | jq
+curl -s http://localhost:8083/connectors/post-bin-sink | jq
+curl -s http://localhost:8083/connectors/post-bin-sink/status | jq
+curl -s http://localhost:8083/connectors/post-bin-sink/config | jq
+curl -s http://localhost:8083/connectors/post-bin-sink/tasks/ | jq
+curl -s http://localhost:8083/connectors/post-bin-sink/tasks/0/status | jq
+```
+
+### Send some messages
+
+```
+./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic my-topic
+```
+
+### Pausing and resuming the connector
+
+```
+curl -X PUT http://localhost:8083/connectors/post-bin-sink/pause | jq
+curl -X PUT http://localhost:8083/connectors/post-bin-sink/resume | jq
+```
+
+### Restarting connector or task
+
+```
+curl -X POST http://localhost:8083/connectors/post-bin-sink/restart | jq
+curl -X POST http://localhost:8083/connectors/post-bin-sink/tasks/0/restart | jq
+```
+
+### Delete the connector
+
+```
+curl -X DELETE http://localhost:8083/connectors/post-bin-sink | jq
+```
+
 
 ## On OCP
 
