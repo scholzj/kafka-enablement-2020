@@ -66,7 +66,7 @@ Start the 3 Kafka nodes by running these 3 scripts in different terminals:
 * Show listeners, advertised listeners, protocols
 * Show Zookeeper config
 * Show journal files
-* Show other mgmt tools for reassigning topics etc.
+* Show other management tools for reassigning topics etc.
 
 ## Zookeeper
 
@@ -174,9 +174,7 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 
 * Leadership didn't changed, but all replicas are again ISR
 
-
 ## Consumer Groups
-
 
 ### Create a new topic to get rid of the old messages
 
@@ -212,6 +210,34 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 * Kill one of the consumers started before
 * Send some messages with the same key as was used before for this consumer
 * Show that one of the other consumers got the partition assigned and will receive it
+
+### Message replay
+
+Consume the messages from Kafka with a new group:
+
+```
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group replay-group
+```
+
+After it consumes all messages, try to restart it to make sure they were all committed.
+Than go and reset the consumer group offset.
+You can first list all the groups:
+
+```
+./kafka-2.4.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups --list
+```
+
+or describe them:
+
+```
+./kafka-2.4.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups --describe
+```
+
+Reset the offset to 0:
+
+```
+/kafka-2.4.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --to-earliest --group replay-group --topic demo --execute
+```
 
 ## Security
 
