@@ -31,7 +31,7 @@ curl -s http://localhost:8083/connector-plugins | jq
 
 ### Deploy CamelSink plugin
 
-Go to [https://postb.in/](https://postb.in/) and create a new bin.
+Go to [https://webhook.site/](https://webhook.site/) get a new webhook URL.
 Copy the URL and paster it in `http-sink-connector.json` into `camel.sink.url` option.
 And create the connector:
 
