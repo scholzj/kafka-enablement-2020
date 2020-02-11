@@ -18,7 +18,7 @@ Create new topic for out test messages:
 Start a console consumer to see the sent messages:
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic weather-report --from-beginning --property print.key=true --property key.separator=":    "
+./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic weather-report --from-beginning --property print.key=true --property key.separator=":     "
 ```
 
 ## Consumer and Producer APIs

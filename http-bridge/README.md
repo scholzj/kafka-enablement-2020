@@ -26,7 +26,7 @@ Look at how it is configured, how it uses the KAfka user and the secrets for enc
 Deploy it:
 
 ```
-oc apply -f 04-http-brudge.yaml
+oc apply -f 04-http-bridge.yaml
 ```
 
 ## Using the bridge
