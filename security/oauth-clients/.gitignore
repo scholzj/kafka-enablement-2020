@@ -1,0 +1,17 @@
+# Maven specific
+**/target/*
+
+# IntelliJ IDEA specific
+.idea/
+*.iml
+
+# Eclipse specific
+**/.project
+**/.settings/*
+**/.prefs
+**/.classpath
+**/.factorypath
+/target/
+
+hello-world-producer/dependency-reduced-pom.xml
+hello-world-consumer/dependency-reduced-pom.xml

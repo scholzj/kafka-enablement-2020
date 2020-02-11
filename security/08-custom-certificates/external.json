@@ -1,0 +1,17 @@
+{
+    "CN": "External",
+    "names": [
+        {
+            "C":  "CZ",
+            "L":  "Prague",
+            "O":  "Jakub Scholz, Inc."
+        }
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "hosts": [
+        "*.apps.jscholz.rhmw-integrations.net"
+    ]
+}

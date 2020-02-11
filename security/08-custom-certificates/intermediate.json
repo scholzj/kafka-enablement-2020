@@ -1,0 +1,14 @@
+{
+    "CN": "IntermediateCA",
+    "names": [
+        {
+            "C":  "CZ",
+            "L":  "Prague",
+            "O":  "Jakub Scholz, Inc."
+        }
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    }
+}

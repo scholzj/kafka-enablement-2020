@@ -1,0 +1,20 @@
+{
+    "CN": "Internal",
+    "names": [
+        {
+            "C":  "CZ",
+            "L":  "Prague",
+            "O":  "Jakub Scholz, Inc."
+        }
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "hosts": [
+        "*.myproject.svc",
+        "*.my-cluster-kafka-brokers.myproject.svc",
+        "*.myproject.svc.cluster.local",
+        "*.my-cluster-kafka-brokers.myproject.svc.cluster.local"
+    ]
+}

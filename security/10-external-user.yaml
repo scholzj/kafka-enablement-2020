@@ -1,0 +1,28 @@
+apiVersion: kafka.strimzi.io/v1beta1
+kind: KafkaUser
+metadata:
+  name: service-account-ext-kafka-consumer
+  labels:
+    strimzi.io/cluster: my-cluster
+spec:
+  authorization:
+    type: simple
+    acls:
+      - resource:
+          type: topic
+          name: my-topic
+          patternType: literal
+        operation: Read
+        host: "*"
+      - resource:
+          type: topic
+          name: my-topic
+          patternType: literal
+        operation: Describe
+        host: "*"
+      - resource:
+          type: group
+          name: external-group
+          patternType: literal
+        operation: Read
+        host: "*"
