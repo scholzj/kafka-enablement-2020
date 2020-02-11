@@ -261,8 +261,8 @@ Use SSL to producer messages:
       --producer-property security.protocol=SSL \
       --producer-property ssl.truststore.password=123456 \
       --producer-property ssl.truststore.location=./ssl/keys/truststore \
-      --consumer-property ssl.keystore.password=123456 \
-      --consumer-property ssl.keystore.location=./ssl/keys/user1.keystore
+      --producer-property ssl.keystore.password=123456 \
+      --producer-property ssl.keystore.location=./ssl/keys/user1.keystore
 ```
 
 And consume them:

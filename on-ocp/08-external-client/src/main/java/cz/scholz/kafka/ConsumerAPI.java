@@ -37,10 +37,10 @@ public class ConsumerAPI {
 
         props.setProperty(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SSL");
         props.setProperty(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, "../cluster.p12");
-        props.setProperty(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, "SKvvbMle0tij");
+        props.setProperty(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, "kjjJ0RE7ICH0");
         props.setProperty(SslConfigs.SSL_TRUSTSTORE_TYPE_CONFIG, "PKCS12");
         props.setProperty(SslConfigs.SSL_KEYSTORE_LOCATION_CONFIG, "../user.p12");
-        props.setProperty(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, "hTUvMuCBimvO");
+        props.setProperty(SslConfigs.SSL_KEYSTORE_PASSWORD_CONFIG, "gIY4dACpwpbz");
         props.setProperty(SslConfigs.SSL_KEYSTORE_TYPE_CONFIG, "PKCS12");
         props.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "HTTPS");
 
@@ -55,7 +55,7 @@ public class ConsumerAPI {
          */
         int i = 0;
         while (i < 100)    {
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(5));
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(60));
 
             if (records.isEmpty()) {
                 LOG.warn("No messages received");
