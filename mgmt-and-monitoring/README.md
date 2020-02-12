@@ -91,6 +91,7 @@ Go through it in IDE.
 ### Prometheus
 
 First we need to install Prometheus.
+If you run this demo in other namespace than `myproject`, you have to change the namespace in the `ClusterRoleBinding` inside `01-prometheus/prometheus.yaml`.
 You can use the Prometheus operator or the files from this demo:
 
 ```
