@@ -137,7 +137,8 @@ Show the dashboards and walk through them.
 ### Jaeger
 
 Install the Jaeger operator from the Operator Hub.
-And create the following Jaeger resource either using the UI:
+
+After the Jaeger operator is running, create the following Jaeger resource either using the UI:
 
 ```yaml
 apiVersion: jaegertracing.io/v1
