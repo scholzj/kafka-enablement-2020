@@ -1,6 +1,7 @@
 # Mirroring
 
 This demo is using Mirror Maker between two Kafka cluster on the same OCP cluster, but in different namespace.
+A video recording of this demo can be found here: https://youtu.be/rda8yrd_-mE
 
 ## Namespaces
 

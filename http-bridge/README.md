@@ -1,5 +1,7 @@
 # HTTP Bridge
 
+The video of this demo can be found here: https://youtu.be/wjMlihYpW5A
+
 ## Setup
 
 ### Kafka cluster
