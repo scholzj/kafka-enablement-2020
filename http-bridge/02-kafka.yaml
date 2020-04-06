@@ -10,10 +10,8 @@ spec:
     resources:
       requests:
         memory: 2Gi
-        cpu: 500m
       limits:
         memory: 2Gi
-        cpu: "1"
     jvmOptions:
       -Xms: 1024m
       -Xmx: 1024m
@@ -43,10 +41,8 @@ spec:
     resources:
       requests:
         memory: 1Gi
-        cpu: "0.3"
       limits:
         memory: 1Gi
-        cpu: "0.5"
     storage:
       type: persistent-claim
       size: 100Gi
@@ -58,19 +54,15 @@ spec:
       resources:
         requests:
           memory: 256Mi
-          cpu: "0.1"
         limits:
           memory: 256Mi
-          cpu: "0.5"
       jvmOptions:
         gcLoggingEnabled: false
     userOperator:
       resources:
         requests:
           memory: 256Mi
-          cpu: "0.1"
         limits:
           memory: 256Mi
-          cpu: "0.5"
       jvmOptions:
         gcLoggingEnabled: false

@@ -6,7 +6,7 @@
 
 Deploy the cluster operator and Kafka cluster:
 
-```
+```sh
 oc apply -f 01-operator
 oc apply -f 02-kafka.yaml
 ```
@@ -15,17 +15,17 @@ oc apply -f 02-kafka.yaml
 
 Create two topics `my-topic` and `my-topic2`:
 
-```
+```sh
 oc apply -f 03-topics.yaml
 ```
 
 ## HTTP Bridge
 
 Check the `04-http-bridge.yaml` file.
-Look at how it is configured, how it uses the KAfka user and the secrets for encryption and authentication.
+Look at how it is configured, how it uses the Kafka user and the secrets for encryption and authentication.
 Deploy it:
 
-```
+```sh
 oc apply -f 04-http-bridge.yaml
 ```
 
@@ -33,7 +33,7 @@ oc apply -f 04-http-bridge.yaml
 
 To make the commands easier, lets store the route address of the bridge into an environment variable:
 
-```
+```sh
 export BRIDGE="$(oc get routes my-bridge -o jsonpath='{.status.ingress[0].host}')"
 ```
 
@@ -60,9 +60,9 @@ curl -X POST $BRIDGE/consumers/my-group \
     "name": "consumer1",
     "format": "json",
     "auto.offset.reset": "earliest",
-    "enable.auto.commit": "false",
-    "fetch.min.bytes": "512",
-    "consumer.request.timeout.ms": "30000"
+    "enable.auto.commit": false,
+    "fetch.min.bytes": 512,
+    "consumer.request.timeout.ms": 30000
   }' \
   | jq
 ```
@@ -82,6 +82,12 @@ And then we can consume the messages (can be called repeatedly - e.g. in a loop)
 curl -X GET $BRIDGE/consumers/my-group/instances/consumer1/records \
   -H 'accept: application/vnd.kafka.json.v2+json' \
   | jq
+```
+
+Now after we process the messages, we can commit them:
+
+```sh
+curl -X POST $BRIDGE/consumers/my-group/instances/consumer1/offsets
 ```
 
 At the end we should close the consumer
