@@ -10,4 +10,4 @@ truststore
 *.properties.dynamic.next
 *.iml
 .idea
-*/target
+target
