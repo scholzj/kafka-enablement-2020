@@ -1,23 +1,25 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
-  name: us-my-topic
+  name: us-my-mm1-topic
+  namespace: kafka-europe
   labels:
     strimzi.io/cluster: europe
 spec:
   partitions: 3
-  replicas: 3
+  replicas: 1
 ---
 
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
-  name: europe-my-topic
+  name: europe-my-mm1-topic
+  namespace: kafka-europe
   labels:
     strimzi.io/cluster: europe
 spec:
   partitions: 3
-  replicas: 3
+  replicas: 1
 ---
 
 apiVersion: apps/v1
@@ -26,6 +28,7 @@ metadata:
   labels:
     app: kafka-producer
   name: kafka-producer
+  namespace: kafka-europe
 spec:
   replicas: 1
   selector:
@@ -43,7 +46,7 @@ spec:
           - name: BOOTSTRAP_SERVERS
             value: europe-kafka-bootstrap:9092
           - name: TOPIC
-            value: europe-my-topic
+            value: europe-my-mm1-topic
           - name: TIMER
             value: "1000"
           - name: MESSAGE
@@ -58,6 +61,7 @@ metadata:
   labels:
     app: kafka-consumer
   name: kafka-consumer
+  namespace: kafka-europe
 spec:
   replicas: 1
   selector:
@@ -75,6 +79,6 @@ spec:
           - name: BOOTSTRAP_SERVERS
             value: europe-kafka-bootstrap:9092
           - name: PATTERN
-            value: ".*my-topic.*"
+            value: ".*my-mm1-topic.*"
           - name: GROUP_ID
             value: my-group

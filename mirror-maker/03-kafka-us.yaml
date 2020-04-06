@@ -2,25 +2,41 @@ apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
   name: us
+  namespace: kafka-us
   labels:
     app: us
 spec:
   kafka:
-    replicas: 3
+    replicas: 1
     listeners:
       plain: {}
       tls: {}
+      external:
+        type: route
+    resources:
+      requests:
+        memory: 2Gi
+      limits:
+        memory: 2Gi
+    jvmOptions:
+      -Xms: 1024m
+      -Xmx: 1024m
     config:
       auto.create.topics.enable: "false"
-      offsets.topic.replication.factor: 3
-      transaction.state.log.replication.factor: 3
-      transaction.state.log.min.isr: 2
+      offsets.topic.replication.factor: 1
+      transaction.state.log.replication.factor: 1
+      transaction.state.log.min.isr: 1
     storage:
       type: persistent-claim
       size: 100Gi
       deleteClaim: true
   zookeeper:
-    replicas: 3
+    replicas: 1
+    resources:
+      requests:
+        memory: 1Gi
+      limits:
+        memory: 1Gi
     storage:
       type: persistent-claim
       size: 100Gi
