@@ -76,7 +76,7 @@ Start the 3 Kafka nodes by running these 3 scripts in different terminals:
 * Start the ZK client
 
 ```
-bin/zookeeper-shell.sh localhost:2181
+./kafka-2.5.0/bin/zookeeper-shell.sh localhost:2181
 ```
 
 * Show some paths in ZK
