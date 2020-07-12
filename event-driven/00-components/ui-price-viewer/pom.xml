@@ -81,7 +81,7 @@
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>cz.scholz.rhdevelopermeetupbrno.priceviewer.Main</mainClass>
+                                    <mainClass>cz.scholz.eventdriven.priceviewer.Main</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

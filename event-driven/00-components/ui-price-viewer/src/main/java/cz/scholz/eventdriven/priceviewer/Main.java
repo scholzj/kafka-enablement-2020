@@ -1,4 +1,4 @@
-package cz.scholz.rhdevelopermeetupbrno.priceviewer;
+package cz.scholz.eventdriven.priceviewer;
 
 import io.vertx.core.*;
 import org.slf4j.Logger;

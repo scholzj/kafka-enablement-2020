@@ -2,7 +2,7 @@
 # Prices Topic
 ###########
 
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
   name: prices
@@ -21,7 +21,7 @@ spec:
 # Kafka Connect User
 ###########
 
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: my-connect-cluster
@@ -109,7 +109,7 @@ spec:
       operation: Create
 ---
 
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaConnect
 metadata:
   name: my-connect-cluster
@@ -119,7 +119,7 @@ metadata:
     strimzi.io/use-connector-resources: "true"
 spec:
   image: quay.io/kafka-enablement-2020/event-driven:price-feed-connector
-  version: 2.1.1
+  version: 2.5.0
   replicas: 1
   resources:
     requests:

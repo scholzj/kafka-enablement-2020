@@ -1,4 +1,4 @@
-package cz.scholz.rhdevelopermeetupbrno.priceviewer;
+package cz.scholz.eventdriven.portfolioviewer;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -18,16 +18,16 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PriceViewer extends AbstractVerticle {
-    private static final Logger log = LoggerFactory.getLogger(PriceViewer.class.getName());
+public class PortfolioViewer extends AbstractVerticle {
+    private static final Logger log = LoggerFactory.getLogger(PortfolioViewer.class.getName());
 
     private final Map<String, Float> portfolio = new HashMap<>();
 
-    private final PriceViewerConfig verticleConfig;
+    private final PortfolioViewerConfig verticleConfig;
     private KafkaConsumer<String, Float> consumer;
 
-    public PriceViewer(PriceViewerConfig verticleConfig) {
-        log.info("Creating PricedPortfolioViewer");
+    public PortfolioViewer(PortfolioViewerConfig verticleConfig) {
+        log.info("Creating PortfolioViewer");
         this.verticleConfig = verticleConfig;
     }
 
@@ -36,7 +36,7 @@ public class PriceViewer extends AbstractVerticle {
      */
     @Override
     public void start(Future<Void> start) {
-        log.info("Starting PricedPortfolioViewer");
+        log.info("Starting PortfolioViewer");
 
         Map<String, String> config = new HashMap<>();
         config.put("bootstrap.servers", verticleConfig.getBootstrapServers());
@@ -106,7 +106,7 @@ public class PriceViewer extends AbstractVerticle {
         router.get("/portfolioviewer").handler(req -> {
             log.info("Received GET /portfolioviewer request");
 
-            String output = new JsonArray(portfolio.entrySet().stream().map(entry -> new JsonObject().put("code", entry.getKey()).put("price", String.format("%.2f", entry.getValue()))).collect(Collectors.toList())).encodePrettily();
+            String output = new JsonArray(portfolio.entrySet().stream().map(entry -> new JsonObject().put("code", entry.getKey()).put("value", String.format("%.2f", entry.getValue()))).collect(Collectors.toList())).encodePrettily();
 
             HttpServerResponse response = req.response();
             response.putHeader("content-type", "application/json");
@@ -123,7 +123,7 @@ public class PriceViewer extends AbstractVerticle {
      */
     @Override
     public void stop(Future<Void> stopFuture) {
-        log.info("Stopping the PricedPortfolioViewer.");
+        log.info("Stopping the PortfolioViewer.");
         consumer.close(res -> {
             stopFuture.complete();
         });

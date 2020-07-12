@@ -1,4 +1,4 @@
-package cz.scholz.rhdevelopermeetupbrno.trademanager;
+package cz.scholz.eventdriven.trademanager;
 
 public class TradeManagerConfig {
     private final String bootstrapServers;

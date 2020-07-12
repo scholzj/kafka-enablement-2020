@@ -1,4 +1,4 @@
-package cz.scholz.rhdevelopermeetupbrno.portfolioviewer;
+package cz.scholz.eventdriven.portfolioviewer;
 
 import io.vertx.core.*;
 import org.slf4j.Logger;

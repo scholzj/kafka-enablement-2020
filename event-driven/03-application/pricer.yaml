@@ -1,4 +1,4 @@
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
   name: portfolio
@@ -18,7 +18,7 @@ spec:
 # Prices -> Agregates and evaluates the portfolio
 #########
 
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: pricer
@@ -81,7 +81,7 @@ spec:
       operation: Read
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -89,6 +89,9 @@ metadata:
   name: pricer
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: pricer
   template:
     metadata:
       labels:
@@ -127,7 +130,7 @@ spec:
 # Priced protfolio viewer
 #########
 
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: ui-portfolio-viewer
@@ -154,7 +157,7 @@ spec:
       operation: Read
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -162,6 +165,9 @@ metadata:
   name: ui-portfolio-viewer
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: ui-portfolio-viewer
   template:
     metadata:
       labels:

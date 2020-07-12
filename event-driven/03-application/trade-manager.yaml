@@ -1,4 +1,4 @@
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: ui-trade-manager
@@ -29,7 +29,7 @@ spec:
       operation: Read
 ---
 
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
   name: trades
@@ -44,7 +44,7 @@ spec:
     segment.bytes: 107374182
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -52,6 +52,9 @@ metadata:
   name: ui-trade-manager
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: ui-trade-manager
   template:
     metadata:
       labels:

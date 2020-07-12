@@ -2,7 +2,7 @@
 # UI Price Viewer
 ###########
 
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: ui-price-viewer
@@ -29,7 +29,7 @@ spec:
       operation: Read
 ---
 
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -37,6 +37,9 @@ metadata:
   name: ui-price-viewer
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: ui-price-viewer
   template:
     metadata:
       labels:

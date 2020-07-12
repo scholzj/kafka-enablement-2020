@@ -1,6 +1,6 @@
-package cz.scholz.rhdevelopermeetupbrno.priceviewer;
+package cz.scholz.eventdriven.portfolioviewer;
 
-public class PriceViewerConfig {
+public class PortfolioViewerConfig {
     private final String bootstrapServers;
     private final String topic;
     private final String groupId;
@@ -12,7 +12,7 @@ public class PriceViewerConfig {
     private final String username;
     private final String password;
 
-    public PriceViewerConfig(String bootstrapServers, String topic, String groupId, String trustStorePassword, String trustStorePath, String keyStorePassword, String keyStorePath, String username, String password) {
+    public PortfolioViewerConfig(String bootstrapServers, String topic, String groupId, String trustStorePassword, String trustStorePath, String keyStorePassword, String keyStorePath, String username, String password) {
         this.bootstrapServers = bootstrapServers;
         this.topic = topic;
         this.groupId = groupId;
@@ -24,7 +24,7 @@ public class PriceViewerConfig {
         this.password = password;
     }
 
-    public static PriceViewerConfig fromEnv() {
+    public static PortfolioViewerConfig fromEnv() {
         String bootstrapServers = System.getenv("BOOTSTRAP_SERVERS");
         String topic = System.getenv("TOPIC");
         String groupId = System.getenv("GROUP_ID");
@@ -35,7 +35,7 @@ public class PriceViewerConfig {
         String username = System.getenv("USERNAME") == null ? null : System.getenv("USERNAME");
         String password = System.getenv("PASSWORD") == null ? null : System.getenv("PASSWORD");
 
-        return new PriceViewerConfig(bootstrapServers, topic, groupId, trustStorePassword, trustStorePath, keyStorePassword, keyStorePath, username, password);
+        return new PortfolioViewerConfig(bootstrapServers, topic, groupId, trustStorePassword, trustStorePath, keyStorePassword, keyStorePath, username, password);
     }
 
     public String getBootstrapServers() {

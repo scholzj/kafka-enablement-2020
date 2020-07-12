@@ -1,4 +1,4 @@
-package cz.scholz.rhdevelopermeetupbrno.pricefeedconnector;
+package cz.scholz.eventdriven.pricefeedconnector;
 
 public class ShareMasterData {
     private String code;

@@ -1,4 +1,4 @@
-package cz.scholz.rhdevelopermeetupbrno.trademanager;
+package cz.scholz.eventdriven.trademanager;
 
 import io.vertx.core.*;
 import org.slf4j.Logger;

@@ -2,7 +2,7 @@
  * Copyright 2018, Jakub Scholz
  * License: Apache License 2.0 (see the file LICENSE or http://apache.org/licenses/LICENSE-2.0.html).
  */
-package cz.scholz.rhdevelopermeetupbrno.pricefeedconnector;
+package cz.scholz.eventdriven.pricefeedconnector;
 
 import org.apache.kafka.common.config.AbstractConfig;
 import org.apache.kafka.common.config.ConfigDef;
