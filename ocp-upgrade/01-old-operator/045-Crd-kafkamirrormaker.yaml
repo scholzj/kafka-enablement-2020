@@ -4,6 +4,7 @@ metadata:
   name: kafkamirrormakers.kafka.strimzi.io
   labels:
     app: strimzi
+    strimzi.io/crd-install: "true"
 spec:
   group: kafka.strimzi.io
   versions:
@@ -22,9 +23,11 @@ spec:
     plural: kafkamirrormakers
     shortNames:
     - kmm
+    categories:
+    - strimzi
   additionalPrinterColumns:
   - name: Desired replicas
-    description: The desired number of Kafka Mirror Maker replicas
+    description: The desired number of Kafka MirrorMaker replicas
     JSONPath: .spec.replicas
     type: integer
   - name: Consumer Bootstrap Servers
@@ -521,16 +524,25 @@ spec:
             jvmOptions:
               type: object
               properties:
-                -XX:
+                "-XX":
                   type: object
-                -Xms:
+                "-Xms":
                   type: string
                   pattern: '[0-9]+[mMgG]?'
-                -Xmx:
+                "-Xmx":
                   type: string
                   pattern: '[0-9]+[mMgG]?'
                 gcLoggingEnabled:
                   type: boolean
+                javaSystemProperties:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      value:
+                        type: string
             logging:
               type: object
               properties:

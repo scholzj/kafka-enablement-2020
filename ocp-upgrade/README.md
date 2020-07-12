@@ -2,7 +2,7 @@
 
 ## Requirements
 
-This demo expects you to have an OCP cluster with OCP 3.11 or higher.
+This lab expects you to have an OCP cluster with OCP 3.11 or higher.
 Normally it is executed against OCP 4 running on AWS.
 It expects to be executed against the namespace `myproject`
 
@@ -12,36 +12,35 @@ oc new-project myproject
 
 ## Deploy the old operator from YAML files
 
-First, deploy the old operator. 
-In this case Strimzi 0.16.2.
+* First, deploy the old operator. 
+In this case Strimzi 0.17.0 (=> AMQ Streams 1.4).
 
 ```
 oc apply -f 01-old-operator/
 ```
 
-## Deploy Kafka 2.3.1
+## Deploy Kafka 2.4.0
 
-Next deploy Kafka 2.3.1 using the old operator version.
+* Next deploy Kafka 2.4.0 using the old operator version.
 
 ```
-oc apply -f 02-kafka-2.3.0.yaml
+oc apply -f 02-kafka-2.4.0.yaml
 ```
 
 ## Upgrade the operator
 
-Upgrade the operator by installing the new operator:
+* Upgrade the operator by installing the new operator Strimzi 0.18.0 (=> AMQ Streams 1.5):
 
 ```
 oc apply -f 03-new-operator/
 ```
 
-Rolling update will occur.
+* Rolling update will occur.
 This is needed to make the pods use the same container images as the operator does.
 This does not change Kafka version.
 
 ## Upgrade Kafka
 
-Edit the Kafka CR and change the version field to `2.4.0.
-Watch the rolling updates happen multiple times.
-
-After the upgrade is finished, update the clients and the `log.message.format.version` option.
+* Edit the Kafka CR and change the version field to `2.5.0.
+* Watch the rolling updates happen multiple times.
+* After the upgrade is finished, update the clients and the `log.message.format.version` option.

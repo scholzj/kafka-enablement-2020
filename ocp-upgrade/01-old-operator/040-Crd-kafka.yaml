@@ -4,6 +4,7 @@ metadata:
   name: kafkas.kafka.strimzi.io
   labels:
     app: strimzi
+    strimzi.io/crd-install: "true"
 spec:
   group: kafka.strimzi.io
   versions:
@@ -22,6 +23,8 @@ spec:
     plural: kafkas
     shortNames:
     - k
+    categories:
+    - strimzi
   additionalPrinterColumns:
   - name: Desired Kafka replicas
     description: The desired number of Kafka replicas in the cluster
@@ -143,6 +146,8 @@ spec:
                               - secretName
                             disableTlsHostnameVerification:
                               type: boolean
+                            enableECDSA:
+                              type: boolean
                             introspectionEndpointUri:
                               type: string
                             jwksEndpointUri:
@@ -250,6 +255,8 @@ spec:
                               - key
                               - secretName
                             disableTlsHostnameVerification:
+                              type: boolean
+                            enableECDSA:
                               type: boolean
                             introspectionEndpointUri:
                               type: string
@@ -374,6 +381,8 @@ spec:
                               - key
                               - secretName
                             disableTlsHostnameVerification:
+                              type: boolean
+                            enableECDSA:
                               type: boolean
                             introspectionEndpointUri:
                               type: string
@@ -546,14 +555,35 @@ spec:
                 authorization:
                   type: object
                   properties:
+                    clientId:
+                      type: string
+                    delegateToKafkaAcls:
+                      type: boolean
+                    disableTlsHostnameVerification:
+                      type: boolean
                     superUsers:
                       type: array
                       items:
                         type: string
+                    tlsTrustedCertificates:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          certificate:
+                            type: string
+                          secretName:
+                            type: string
+                        required:
+                        - certificate
+                        - secretName
+                    tokenEndpointUri:
+                      type: string
                     type:
                       type: string
                       enum:
                       - simple
+                      - keycloak
                   required:
                   - type
                 config:
@@ -824,16 +854,25 @@ spec:
                 jvmOptions:
                   type: object
                   properties:
-                    -XX:
+                    "-XX":
                       type: object
-                    -Xms:
+                    "-Xms":
                       type: string
                       pattern: '[0-9]+[mMgG]?'
-                    -Xmx:
+                    "-Xmx":
                       type: string
                       pattern: '[0-9]+[mMgG]?'
                     gcLoggingEnabled:
                       type: boolean
+                    javaSystemProperties:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
                 jmxOptions:
                   type: object
                   properties:
@@ -1686,16 +1725,25 @@ spec:
                 jvmOptions:
                   type: object
                   properties:
-                    -XX:
+                    "-XX":
                       type: object
-                    -Xms:
+                    "-Xms":
                       type: string
                       pattern: '[0-9]+[mMgG]?'
-                    -Xmx:
+                    "-Xmx":
                       type: string
                       pattern: '[0-9]+[mMgG]?'
                     gcLoggingEnabled:
                       type: boolean
+                    javaSystemProperties:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          value:
+                            type: string
                 resources:
                   type: object
                   properties:
@@ -3267,6 +3315,64 @@ spec:
                   enum:
                   - renew-certificate
                   - replace-key
+            jmxTrans:
+              type: object
+              properties:
+                image:
+                  type: string
+                outputDefinitions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      outputType:
+                        type: string
+                      host:
+                        type: string
+                      port:
+                        type: integer
+                      flushDelayInSeconds:
+                        type: integer
+                      typeNames:
+                        type: array
+                        items:
+                          type: string
+                      name:
+                        type: string
+                    required:
+                    - outputType
+                    - name
+                logLevel:
+                  type: string
+                kafkaQueries:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      targetMBean:
+                        type: string
+                      attributes:
+                        type: array
+                        items:
+                          type: string
+                      outputs:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - targetMBean
+                    - attributes
+                    - outputs
+                resources:
+                  type: object
+                  properties:
+                    limits:
+                      type: object
+                    requests:
+                      type: object
+              required:
+              - outputDefinitions
+              - kafkaQueries
             kafkaExporter:
               type: object
               properties:
@@ -3684,3 +3790,7 @@ spec:
                           type: string
                         port:
                           type: integer
+                  certificates:
+                    type: array
+                    items:
+                      type: string

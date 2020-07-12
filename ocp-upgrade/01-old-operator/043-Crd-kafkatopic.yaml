@@ -4,6 +4,7 @@ metadata:
   name: kafkatopics.kafka.strimzi.io
   labels:
     app: strimzi
+    strimzi.io/crd-install: "true"
 spec:
   group: kafka.strimzi.io
   versions:
@@ -22,6 +23,8 @@ spec:
     plural: kafkatopics
     shortNames:
     - kt
+    categories:
+    - strimzi
   additionalPrinterColumns:
   - name: Partitions
     description: The desired number of partitions in the topic
