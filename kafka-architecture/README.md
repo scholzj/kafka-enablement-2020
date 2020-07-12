@@ -55,31 +55,34 @@ Start the 3 Kafka nodes by running these 3 scripts in different terminals:
 
 ### Zookeeper configuration
 
-* Show Zookeeper config files
-* Explain the `myid` file which needs to be created
-* Show the ensemble configuration
+* Look at the Zookeeper config files in `./configs/zookeeper/`
+* Look at the ensemble configuration in the Zookeeper properties files
+* Check the content of the Zookeeper data dirs in `/tmp`
+    * Notice the `myid` file which needs to be created before starting Zookeeper with the node ID
 
 ### Kafka configuration
 
-* Show Kafka configuration files
-* Show `broker.id`
-* Show listeners, advertised listeners, protocols
-* Show Zookeeper config
-* Show journal files
-* Show other management tools for reassigning topics etc.
+* Look at the Kafka configuration files in `./configs/kafka/`
+* Notice:
+    * `broker.id`
+    * listeners, advertised listeners, protocols
+    * Zookeeper config
+* Look at the data dir in `/tmp`
+* Look at the tools in `./kafka-2.5.0/bin`
 
 ## Zookeeper
 
 ### Show what Kafka does in Zookeeper
 
-* Explain that ZK is integrated into the Kafka distribution file
+* Find and notice the ZK JAR files in `./kafka-2.5.0/libs` and `./kafka-2.5.0/bin` - Zookeeper is integrated into Kafka distribution
 * Start the ZK client
 
 ```
 ./kafka-2.5.0/bin/zookeeper-shell.sh localhost:2181
 ```
 
-* Show some paths in ZK
+* Browse through the Zookeeper nodes
+    * You can for example investigate the following nodes:
 
 ```
 ls /
@@ -90,13 +93,13 @@ get /brokers/ids/0
 ls /brokers/topics
 ```
 
-* Show netcat dump with connected brokers
+* Try to do netcat dump with connected brokers
 
 ```
 echo dump | nc localhost 2181
 ```
 
-* Kill one of the brokers and show how it disappears
+* Kill one of the brokers and do the netcat again to see how it disappeared
 
 ```
 echo dump | nc localhost 2181
@@ -117,9 +120,11 @@ echo dump | nc localhost 2181
 ./kafka-2.5.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
 ```
 
-Notice the distribution of leaders and the ISR replicas. Explain also the RackID feature.
+Notice the distribution of leaders and the ISR replicas.
 
 ### Send some messages
+
+* Send at least 10 messages (e.g. `Message 1`, `Message 2` etc. to be able to notice the ordering later)
 
 ```
 ./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
@@ -139,7 +144,7 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 ./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --from-beginning
 ```
 
-* Show reading from a particular offset
+* Reading from a particular offset
 
 ```
 ./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --offset 2
@@ -150,7 +155,7 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 ### Broker crash
 
 * Kill one of the brokers
-* Show again the topic description with the leaders which changed and new ISR
+* Look again at the topic description with the leaders which changed and new ISR
 
 ```
 ./kafka-2.5.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
@@ -158,13 +163,13 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 
 ### Consume messages
 
-* Show that the messages are still in the topic!
+* Try to consume the messages again to confirm that replication worked and that the messages are still in the topic!
 
 ```
 ./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning
 ```
 
-### Send some messages
+### Send some new messages
 
 ```
 ./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
@@ -185,6 +190,8 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 
 ### Setup consumers
 
+_(in different terminals)_
+
 * Open 3 consumers using the same group `group-1`
 
 ```
@@ -199,7 +206,7 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 
 ### Send messages
 
-* Send some messages with keys
+* Send some messages with keys (Send messages in the format `key:payload` - e.g. `my-key:my-value`)
 
 ```
 ./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo --property "parse.key=true" --property "key.separator=:"
@@ -209,37 +216,36 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 
 * Kill one of the consumers started before
 * Send some messages with the same key as was used before for this consumer
-* Show that one of the other consumers got the partition assigned and will receive it
+* Notice that one of the other consumers got the partition assigned and will receive it
 
 ### Message replay
 
-Consume the messages from Kafka with a new group:
+* Consume the messages from Kafka with a new group:
 
 ```
 ./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group replay-group
 ```
 
-After it consumes all messages, try to restart it to make sure they were all committed.
-Than go and reset the consumer group offset.
-You can first list all the groups:
+* After it consumes all messages, try to restart it to make sure they were all committed - no messages should be received
+* List all the groups:
 
 ```
 ./kafka-2.5.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups --list
 ```
 
-or describe them:
+* Or describe them:
 
 ```
 ./kafka-2.5.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups --describe
 ```
 
-Reset the offset to 0:
+* Go and reset the offset to 0:
 
 ```
 ./kafka-2.5.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --to-earliest --group replay-group --topic demo --execute
 ```
 
-Try to consume the messages again - you should receive them from the beginning of the topic:
+* Try to consume the messages again - you should receive them from the beginning of the topic:
 
 ```
 ./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group replay-group
@@ -249,11 +255,11 @@ Try to consume the messages again - you should receive them from the beginning o
 
 ### Configuration
 
-Check the configuration of the brokers related to the TLS & SASL.
+* Look in the configuration files of the brokers (`./configs/kafka/`) and check the fields related to the TLS & SASL.
 
 ### SSL Consumers and Producers
 
-Use SSL to producer messages:
+* Use SSL to producer messages:
 
 ```
 ./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:19092 \
@@ -265,7 +271,7 @@ Use SSL to producer messages:
       --producer-property ssl.keystore.location=./ssl/keys/user1.keystore
 ```
 
-And consume them:
+* And consume them:
 
 ```
 ./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:19092 \
@@ -279,8 +285,8 @@ And consume them:
 
 ### SASL Consumers and Producers
 
-Check the `sasl-client.properties` file  which configures SASL PLAIN authentication 
-Try to producer some messages:
+* Check the `sasl-client.properties` file  which configures SASL PLAIN authentication 
+* Try to producer some messages:
 
 ```
 ./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:39092 \
@@ -288,7 +294,7 @@ Try to producer some messages:
       --producer.config sasl-client.properties
 ```
 
-And consume them:
+* And consume them:
 
 ```
 ./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:39092 \
