@@ -37,7 +37,7 @@ Check the offsets but also the consumer lag.
 Reset the offset to 0:
 
 ```
-/kafka-2.4.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --to-earliest --group replay-group --topic demo --execute
+/./kafka-2.5.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --to-earliest --group replay-group --topic demo --execute
 ```
 
 Reset the offset to last message:
@@ -55,7 +55,7 @@ Try other options as well:
 First we create a new topic which we will be later reassigning:
 
 ```
-kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic reassignment-topic --partitions 1 --replication-factor 1
+./kafka-2.5.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic reassignment-topic --partitions 1 --replication-factor 1
 ```
 
 Next, we generate reassignment file.
