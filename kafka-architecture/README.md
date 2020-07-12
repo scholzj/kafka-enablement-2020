@@ -107,14 +107,14 @@ echo dump | nc localhost 2181
 ### Create topic
 
 ```
-./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 3
+./kafka-2.5.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 3
 ```
 
 ### Check the created topic
 
 ```
-./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list --topic demo
-./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
+./kafka-2.5.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list --topic demo
+./kafka-2.5.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
 ```
 
 Notice the distribution of leaders and the ISR replicas. Explain also the RackID feature.
@@ -122,7 +122,7 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 ### Send some messages
 
 ```
-./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
+./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
 ```
 
 ### Consume messages
@@ -130,19 +130,19 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 * Read from the whole topic
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning
 ```
 
 * Notice how the messages are out of order. And check how nicely ordered they are in a single partition.
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --from-beginning
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --from-beginning
 ```
 
 * Show reading from a particular offset
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --offset 2
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --partition 0 --offset 2
 ```
 
 ## Replication
@@ -153,7 +153,7 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 * Show again the topic description with the leaders which changed and new ISR
 
 ```
-./kafka-2.4.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
+./kafka-2.5.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic demo
 ```
 
 ### Consume messages
@@ -161,13 +161,13 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 * Show that the messages are still in the topic!
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning
 ```
 
 ### Send some messages
 
 ```
-./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
+./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
 ```
 
 ### Start the broker again
@@ -179,8 +179,8 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 ### Create a new topic to get rid of the old messages
 
 ```
-./kafka-2.4.0/bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --delete --topic demo
-./kafka-2.4.0/bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 3
+./kafka-2.5.0/bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --delete --topic demo
+./kafka-2.5.0/bin/kafka-topics.sh --zookeeper --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 3
 ```
 
 ### Setup consumers
@@ -188,13 +188,13 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 * Open 3 consumers using the same group `group-1`
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning --property print.key=true --property key.separator=":" --group group-1
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning --property print.key=true --property key.separator=":" --group group-1
 ```
 
 * Open consumer using a different group `group-2`
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group group-2
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group group-2
 ```
 
 ### Send messages
@@ -202,7 +202,7 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 * Send some messages with keys
 
 ```
-./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo --property "parse.key=true" --property "key.separator=:"
+./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo --property "parse.key=true" --property "key.separator=:"
 ```
 
 ### Rebalancing consumer group
@@ -216,7 +216,7 @@ Notice the distribution of leaders and the ISR replicas. Explain also the RackID
 Consume the messages from Kafka with a new group:
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group replay-group
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group replay-group
 ```
 
 After it consumes all messages, try to restart it to make sure they were all committed.
@@ -224,25 +224,25 @@ Than go and reset the consumer group offset.
 You can first list all the groups:
 
 ```
-./kafka-2.4.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups --list
+./kafka-2.5.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups --list
 ```
 
 or describe them:
 
 ```
-./kafka-2.4.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups --describe
+./kafka-2.5.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --all-groups --describe
 ```
 
 Reset the offset to 0:
 
 ```
-./kafka-2.4.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --to-earliest --group replay-group --topic demo --execute
+./kafka-2.5.0/bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --reset-offsets --to-earliest --group replay-group --topic demo --execute
 ```
 
 Try to consume the messages again - you should receive them from the beginning of the topic:
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group replay-group
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic demo --from-beginning  --property print.key=true --property key.separator=":" --group replay-group
 ```
 
 ## Security
@@ -256,7 +256,7 @@ Check the configuration of the brokers related to the TLS & SASL.
 Use SSL to producer messages:
 
 ```
-./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:19092 \
+./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:19092 \
       --topic demo \
       --producer-property security.protocol=SSL \
       --producer-property ssl.truststore.password=123456 \
@@ -268,7 +268,7 @@ Use SSL to producer messages:
 And consume them:
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:19092 \
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:19092 \
       --topic demo --from-beginning \
       --consumer-property security.protocol=SSL \
       --consumer-property ssl.truststore.password=123456 \
@@ -283,7 +283,7 @@ Check the `sasl-client.properties` file  which configures SASL PLAIN authenticat
 Try to producer some messages:
 
 ```
-./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:39092 \
+./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:39092 \
       --topic demo \
       --producer.config sasl-client.properties
 ```
@@ -291,7 +291,7 @@ Try to producer some messages:
 And consume them:
 
 ```
-./kafka-2.4.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:39092 \
+./kafka-2.5.0/bin/kafka-console-consumer.sh --bootstrap-server localhost:39092 \
       --topic demo --from-beginning \
       --consumer.config sasl-client.properties
 ```

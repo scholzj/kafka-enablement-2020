@@ -53,7 +53,7 @@ curl -s http://localhost:8083/connectors/post-bin-sink/tasks/0/status | jq
 ### Send some messages
 
 ```
-./kafka-2.4.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic my-topic
+./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic my-topic
 ```
 
 ### Pausing and resuming the connector
