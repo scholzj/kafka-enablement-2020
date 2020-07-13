@@ -33,9 +33,12 @@ spec:
       transaction.state.log.replication.factor: 3
       transaction.state.log.min.isr: 2
     storage:
-      type: persistent-claim
-      size: 100Gi
-      deleteClaim: true
+      type: jbod
+      volumes:
+      - id: 0
+        type: persistent-claim
+        size: 100Gi
+        deleteClaim: true
   zookeeper:
     replicas: 3
     resources:
