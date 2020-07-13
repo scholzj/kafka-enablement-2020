@@ -1,3 +1,30 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: kafka-connect
+  labels:
+    realm: internal
+spec:
+  realmSelector:
+    matchLabels:
+      realm: internal
+  client:
+    clientId: kafka-connect
+    secret: kafka-connect-secret
+    clientAuthenticatorType: client-secret
+    enabled: true
+    publicClient: false
+    bearerOnly: false
+    standardFlowEnabled: false
+    implicitFlowEnabled: false
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: true
+    consentRequired : false
+    fullScopeAllowed : false
+    attributes:
+      access.token.lifespan: "32140800"
+---
+
 apiVersion: v1
 kind: Secret
 metadata:
@@ -7,7 +34,7 @@ data:
   clientSecret: a2Fma2EtY29ubmVjdC1zZWNyZXQ=
 ---
 
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaConnect
 metadata:
   name: my-connect-cluster
@@ -34,7 +61,7 @@ spec:
     lowercaseOutputName: true
   authentication:
     type: oauth
-    tokenEndpointUri: https://sso.myproject.svc:8443/auth/realms/internal/protocol/openid-connect/token
+    tokenEndpointUri: https://keycloak.myproject.svc:8443/auth/realms/Internal/protocol/openid-connect/token
     clientId: kafka-connect
     clientSecret:
       secretName: my-connect-oauth

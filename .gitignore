@@ -12,3 +12,4 @@ truststore
 .idea
 target
 **/target
+.DS_Store

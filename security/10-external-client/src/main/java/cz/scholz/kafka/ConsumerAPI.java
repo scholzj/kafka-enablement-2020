@@ -27,11 +27,10 @@ public class ConsumerAPI {
         /*
          * Configure the OAuth callback
          */
-        System.setProperty(ClientConfig.OAUTH_TOKEN_ENDPOINT_URI, "https://sso-myproject.apps.jscholz.rhmw-integrations.net/auth/realms/external/protocol/openid-connect/token");
+        System.setProperty(ClientConfig.OAUTH_TOKEN_ENDPOINT_URI, "https://keycloak-myproject.apps.jscholz.rhmw-integrations.net/auth/realms/External/protocol/openid-connect/token");
         System.setProperty(Config.OAUTH_CLIENT_ID, "ext-kafka-consumer");
         System.setProperty(Config.OAUTH_CLIENT_SECRET, "ext-kafka-consumer-secret");
         System.setProperty(Config.OAUTH_USERNAME_CLAIM, "preferred_username");
-        //System.setProperty(Config.OAUTH_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM, "");
         System.setProperty(Config.OAUTH_SSL_TRUSTSTORE_LOCATION, "../oauth.truststore");
         System.setProperty(Config.OAUTH_SSL_TRUSTSTORE_PASSWORD, "123456");
 

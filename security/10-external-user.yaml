@@ -1,3 +1,29 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: ext-kafka-consumer
+  labels:
+    realm: external
+spec:
+  realmSelector:
+    matchLabels:
+      realm: external
+  client:
+    clientId: ext-kafka-consumer
+    secret: ext-kafka-consumer-secret
+    clientAuthenticatorType: client-secret
+    enabled: true
+    publicClient: false
+    bearerOnly: false
+    standardFlowEnabled: false
+    implicitFlowEnabled: false
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: true
+    consentRequired : false
+    fullScopeAllowed : false
+    attributes:
+      access.token.lifespan: "32140800"
+---
 apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:

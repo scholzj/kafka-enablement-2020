@@ -1,4 +1,82 @@
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: hello-world-consumer
+  labels:
+    realm: internal
+spec:
+  realmSelector:
+    matchLabels:
+      realm: internal
+  client:
+    clientId: hello-world-consumer
+    secret: hello-world-consumer-secret
+    clientAuthenticatorType: client-secret
+    enabled: true
+    publicClient: false
+    bearerOnly: false
+    standardFlowEnabled: false
+    implicitFlowEnabled: false
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: true
+    consentRequired : false
+    fullScopeAllowed : false
+    attributes:
+      access.token.lifespan: "32140800"
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: hello-world-producer
+  labels:
+    realm: internal
+spec:
+  realmSelector:
+    matchLabels:
+      realm: internal
+  client:
+    clientId: hello-world-producer
+    secret: hello-world-producer-secret
+    clientAuthenticatorType: client-secret
+    enabled: true
+    publicClient: false
+    bearerOnly: false
+    standardFlowEnabled: false
+    implicitFlowEnabled: false
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: true
+    consentRequired : false
+    fullScopeAllowed : false
+    attributes:
+      access.token.lifespan: "32140800"
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: hello-world-streams
+  labels:
+    realm: internal
+spec:
+  realmSelector:
+    matchLabels:
+      realm: internal
+  client:
+    clientId: hello-world-streams
+    secret: hello-world-streams-secret
+    clientAuthenticatorType: client-secret
+    enabled: true
+    publicClient: false
+    bearerOnly: false
+    standardFlowEnabled: false
+    implicitFlowEnabled: false
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: true
+    consentRequired : false
+    fullScopeAllowed : false
+    attributes:
+      access.token.lifespan: "32140800"
+---
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
   name: my-topic
@@ -8,7 +86,7 @@ spec:
   replicas: 3
   partitions: 12
 ---
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaTopic
 metadata:
   name: my-topic-reversed
@@ -18,7 +96,7 @@ spec:
   replicas: 3
   partitions: 12
 ---
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: service-account-hello-world-producer
@@ -87,14 +165,14 @@ spec:
                 name: hello-world-producer-oauth
                 key: clientSecret
           - name: OAUTH_TOKEN_ENDPOINT_URI
-            value: https://sso.myproject.svc:8443/auth/realms/internal/protocol/openid-connect/token
+            value: https://keycloak.myproject.svc:8443/auth/realms/Internal/protocol/openid-connect/token
           - name: OAUTH_CRT
             valueFrom:
               secretKeyRef:
                 name: sso-x509-https-secret
                 key: tls.crt
 ---
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: service-account-hello-world-streams
@@ -176,14 +254,14 @@ spec:
                   name: hello-world-streams-oauth
                   key: clientSecret
             - name: OAUTH_TOKEN_ENDPOINT_URI
-              value: https://sso.myproject.svc:8443/auth/realms/internal/protocol/openid-connect/token
+              value: https://keycloak.myproject.svc:8443/auth/realms/Internal/protocol/openid-connect/token
             - name: OAUTH_CRT
               valueFrom:
                 secretKeyRef:
                   name: sso-x509-https-secret
                   key: tls.crt
 ---
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: KafkaUser
 metadata:
   name: service-account-hello-world-consumer
@@ -252,7 +330,7 @@ spec:
                   name: hello-world-consumer-oauth
                   key: clientSecret
             - name: OAUTH_TOKEN_ENDPOINT_URI
-              value: https://sso.myproject.svc:8443/auth/realms/internal/protocol/openid-connect/token
+              value: https://keycloak.myproject.svc:8443/auth/realms/Internal/protocol/openid-connect/token
             - name: OAUTH_CRT
               valueFrom:
                 secretKeyRef:

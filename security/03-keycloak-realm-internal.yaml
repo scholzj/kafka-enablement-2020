@@ -1,0 +1,15 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: external
+  labels:
+    realm: external
+spec:
+  instanceSelector:
+    matchLabels:
+      app: keycloak
+  realm:
+    displayName: External Kafka Realm
+    enabled: true
+    id: external
+    realm: External

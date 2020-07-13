@@ -1,4 +1,4 @@
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
   name: my-cluster
@@ -17,13 +17,12 @@ spec:
     jvmOptions:
       -Xms: 1024m
       -Xmx: 1024m
-      gcLoggingEnabled: false
     listeners:
       plain:
         authentication:
           type: oauth
-          validIssuerUri: https://sso.myproject.svc:8443/auth/realms/internal
-          jwksEndpointUri: https://sso.myproject.svc:8443/auth/realms/internal/protocol/openid-connect/certs
+          validIssuerUri: https://keycloak.myproject.svc:8443/auth/realms/Internal
+          jwksEndpointUri: https://keycloak.myproject.svc:8443/auth/realms/Internal/protocol/openid-connect/certs
           userNameClaim: preferred_username
           tlsTrustedCertificates:
             - secretName: sso-x509-https-secret
@@ -31,13 +30,8 @@ spec:
       tls:
         authentication:
           type: oauth
-          validIssuerUri: https://sso.myproject.svc:8443/auth/realms/internal
-          jwksEndpointUri: https://sso.myproject.svc:8443/auth/realms/internal/protocol/openid-connect/certs
-#          introspectionEndpointUri: https://sso.myproject.svc:8443/auth/realms/internal/protocol/openid-connect/token/introspect
-#          clientId: kafka-broker
-#          clientSecret:
-#            secretName: my-cluster-oauth
-#            key: clientSecret
+          validIssuerUri: https://keycloak.myproject.svc:8443/auth/realms/Internal
+          jwksEndpointUri: https://keycloak.myproject.svc:8443/auth/realms/Internal/protocol/openid-connect/certs
           userNameClaim: preferred_username
           tlsTrustedCertificates:
             - secretName: sso-x509-https-secret
@@ -51,13 +45,12 @@ spec:
             key: tls.key
         authentication:
           type: oauth
-          validIssuerUri: https://sso-myproject.apps.jscholz.rhmw-integrations.net/auth/realms/external
-          jwksEndpointUri: https://sso-myproject.apps.jscholz.rhmw-integrations.net/auth/realms/external/protocol/openid-connect/certs
+          validIssuerUri: https://keycloak-myproject.apps.jscholz.rhmw-integrations.net/auth/realms/External
+          jwksEndpointUri: https://keycloak-myproject.apps.jscholz.rhmw-integrations.net/auth/realms/External/protocol/openid-connect/certs
           userNameClaim: preferred_username
           tlsTrustedCertificates:
-            - secretName: ingress-operator-crt
-              certificate: ingress-operator.crt
-          disableTlsHostnameVerification: true
+            - secretName: keycloak-external-tls
+              certificate: tls.crt
     authorization:
       type: simple
       superUsers:
@@ -71,7 +64,12 @@ spec:
       transaction.state.log.replication.factor: 3
       transaction.state.log.min.isr: 2
     storage:
-      type: ephemeral
+      type: jbod
+      volumes:
+      - id: 0
+        type: persistent-claim
+        size: 100Gi
+        deleteClaim: true
     logging:
       type: inline
       loggers:
@@ -90,10 +88,10 @@ spec:
       limits:
         memory: 1Gi
         cpu: "0.5"
-    jvmOptions:
-      gcLoggingEnabled: false
     storage:
-      type: ephemeral
+      type: persistent-claim
+      size: 100Gi
+      deleteClaim: true
   entityOperator:
     topicOperator:
       resources:
@@ -107,8 +105,6 @@ spec:
         loggers:
           rootLogger.level: INFO
         type: inline
-      jvmOptions:
-        gcLoggingEnabled: false
     userOperator:
       resources:
         requests:
@@ -121,14 +117,3 @@ spec:
         loggers:
           rootLogger.level: INFO
         type: inline
-      jvmOptions:
-        gcLoggingEnabled: false
----
-
-apiVersion: v1
-kind: Secret
-metadata:
-  name: my-cluster-oauth
-type: Opaque
-data:
-  clientSecret: a2Fma2EtYnJva2VyLXNlY3JldA==
