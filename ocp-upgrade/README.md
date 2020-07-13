@@ -35,7 +35,7 @@ oc apply -f 02-kafka-2.4.0.yaml
 oc apply -f 03-new-operator/
 ```
 
-* Rolling update will occur.
+* Rolling update will occur (carefull, Zookeeper will roll twice because of the TLS sidecar removal)
 This is needed to make the pods use the same container images as the operator does.
 This does not change Kafka version.
 
@@ -43,4 +43,4 @@ This does not change Kafka version.
 
 * Edit the Kafka CR and change the version field to `2.5.0.
 * Watch the rolling updates happen multiple times.
-* After the upgrade is finished, update the clients and the `log.message.format.version` option.
+* After the upgrade is finished, you can upgrade the clients and afterwards set the `log.message.format.version` option to `2.5`.
