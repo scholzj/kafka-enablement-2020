@@ -3,6 +3,7 @@
 *.pem
 *.crt
 *.csr
+*.key
 *.keystore
 *.p12
 truststore
