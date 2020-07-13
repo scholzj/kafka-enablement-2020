@@ -12,6 +12,12 @@ oc new-project myproject
 
 ## Deploy the operator from YAML files
 
+* Deploy the operator
+
+```
+oc apply -f 01-operator/
+```
+
 In case you are running in different namespace, you will have to change the namespace of the service account in all `ClusterRoleBinding` and `RoleBinding` resources.
 
 * You can do that on Linux using:
@@ -62,13 +68,13 @@ oc apply -f 03-topic.yaml
 * We can check that the topic exists:
 
 ```
-oc run kafka-topics -ti --image=strimzi/kafka:0.16.2-kafka-2.4.0 --rm=true --restart=Never -- bin/kafka-topics.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --describe
+oc run kafka-topics -ti --image=strimzi/kafka:0.18.0-kafka-2.5.0 --rm=true --restart=Never -- bin/kafka-topics.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --describe
 ```
 
 * We can also try to create the topic in Kafka:
 
 ```
-oc run kafka-topics -ti --image=strimzi/kafka:0.16.2-kafka-2.4.0 --rm=true --restart=Never -- bin/kafka-topics.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --create --topic my-topic2 --partitions 12 --replication-factor 3
+oc run kafka-topics -ti --image=strimzi/kafka:0.18.0-kafka-2.5.0 --rm=true --restart=Never -- bin/kafka-topics.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --create --topic my-topic2 --partitions 12 --replication-factor 3
 ```
 
 * And check the created custom resource:
@@ -97,7 +103,7 @@ oc get secret my-user -o yaml
 * As well as the ACL rights
 
 ```
-oc run kafka-acls -ti --image=strimzi/kafka:0.16.2-kafka-2.4.0 --rm=true --restart=Never -- bin/kafka-acls.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --list
+oc run kafka-acls -ti --image=strimzi/kafka:0.18.0-kafka-2.5.0 --rm=true --restart=Never -- bin/kafka-acls.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --list
 ```
 
 ## Deploying application
