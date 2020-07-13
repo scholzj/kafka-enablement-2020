@@ -1,0 +1,12 @@
+{
+    "version": 1,
+    "partitions":
+    [
+        {
+            "topic": "reassignment-topic",
+            "partition" :0,
+            "replicas": [0, 1, 2],
+            "log_dirs": ["any", "any", "any"]
+        }
+    ]
+}
