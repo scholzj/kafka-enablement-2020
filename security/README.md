@@ -109,7 +109,7 @@ oc apply -f 09-kafka-custom-cert.yaml
             key: tls.key
 ```
 
-* Use OpenSSL to check that the new certificate is in use now _(The KAfka address in this command is just an example - your address will differ.)_:
+* Use OpenSSL to check that the new certificate is in use now _(The Kafka address in this command is just an example - your address will differ.)_:
 
 ```
 openssl s_client -showcerts -connect my-cluster-kafka-bootstrap-myproject.apps.jscholz.rhmw-integrations.net:443 -servername my-cluster-kafka-bootstrap-myproject.apps.jscholz.rhmw-integrations.net
@@ -127,8 +127,8 @@ oc apply -f 10-external-user.yaml
 
 ## Network policies
 
-Update the Kafka resource with the new network policies configuration_
-* 
+* Update the Kafka resource with the new network policies configuration_
+
 ```yaml
         networkPolicyPeers:
           - podSelector:
@@ -140,7 +140,7 @@ Update the Kafka resource with the new network policies configuration_
 ```
 
 ```
-oc apply -f 11-kafka-network-polcies.yaml
+oc apply -f 11-kafka-network-polices.yaml
 ```
 
 Restart the Hello World consumers / producers and see how they cannot connect.
