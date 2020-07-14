@@ -1,21 +1,21 @@
 # HTTP Bridge
 
-The video of this demo can be found here: https://youtu.be/wjMlihYpW5A
+The video of this lab can be found here: https://youtu.be/wjMlihYpW5A
 
 ## Setup
 
 ### Kafka cluster
 
-Deploy the cluster operator and Kafka cluster:
+* Deploy the cluster operator and Kafka cluster:
 
 ```sh
-oc apply -f 01-operator
+oc apply -f 01-operator/
 oc apply -f 02-kafka.yaml
 ```
 
 ### Topics
 
-Create two topics `my-topic` and `my-topic2`:
+* Create two topics `my-topic` and `my-topic2`:
 
 ```sh
 oc apply -f 03-topics.yaml
@@ -23,9 +23,9 @@ oc apply -f 03-topics.yaml
 
 ## HTTP Bridge
 
-Check the `04-http-bridge.yaml` file.
+* Check the `04-http-bridge.yaml` file.
 Look at how it is configured, how it uses the Kafka user and the secrets for encryption and authentication.
-Deploy it:
+* Deploy it:
 
 ```sh
 oc apply -f 04-http-bridge.yaml
@@ -33,7 +33,7 @@ oc apply -f 04-http-bridge.yaml
 
 ## Using the bridge
 
-To make the commands easier, lets store the route address of the bridge into an environment variable:
+* To make the commands easier, store the route address of the bridge into an environment variable:
 
 ```sh
 export BRIDGE="$(oc get routes my-bridge -o jsonpath='{.status.ingress[0].host}')"
@@ -41,7 +41,7 @@ export BRIDGE="$(oc get routes my-bridge -o jsonpath='{.status.ingress[0].host}'
 
 ### Sending messages
 
-Send messages using a simple `POST` call.
+* Send messages using a simple `POST` call.
 Notice the `content-type` header which is important!
 
 ```sh
@@ -53,7 +53,7 @@ curl -X POST $BRIDGE/topics/my-topic \
 
 ### Receiving messages
 
-First, we need to create a consumer:
+* First, we need to create a consumer:
 
 ```sh
 curl -X POST $BRIDGE/consumers/my-group \
@@ -69,7 +69,7 @@ curl -X POST $BRIDGE/consumers/my-group \
   | jq
 ```
 
-Then we need to subscribe the consumer to the topics it should receive from:
+* Then we need to subscribe the consumer to the topics it should receive from:
 
 ```sh
 curl -X POST $BRIDGE/consumers/my-group/instances/consumer1/subscription \
@@ -78,7 +78,7 @@ curl -X POST $BRIDGE/consumers/my-group/instances/consumer1/subscription \
   | jq
 ```
 
-And then we can consume the messages (can be called repeatedly - e.g. in a loop):
+* And then we can consume the messages (can be called repeatedly - e.g. in a loop):
 
 ```sh
 curl -X GET $BRIDGE/consumers/my-group/instances/consumer1/records \
@@ -86,13 +86,13 @@ curl -X GET $BRIDGE/consumers/my-group/instances/consumer1/records \
   | jq
 ```
 
-Now after we process the messages, we can commit them:
+* Now after we process the messages, we can commit them:
 
 ```sh
 curl -X POST $BRIDGE/consumers/my-group/instances/consumer1/offsets
 ```
 
-At the end we should close the consumer
+* At the end we should close the consumer
 
 ```sh
 curl -X DELETE $BRIDGE/consumers/my-group/instances/consumer1
@@ -100,7 +100,7 @@ curl -X DELETE $BRIDGE/consumers/my-group/instances/consumer1
 
 ### Sending messages to wrong topic
 
-Try to send the messages to `my-topic2` to see that the ACLs will not allow it.
+* Try to send the messages to `my-topic2` to see that the ACLs will not allow it.
 
 ```sh
 curl -X POST $BRIDGE/topics/my-topic2 \

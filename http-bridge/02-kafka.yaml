@@ -1,4 +1,4 @@
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
   name: my-cluster
@@ -15,7 +15,6 @@ spec:
     jvmOptions:
       -Xms: 1024m
       -Xmx: 1024m
-      gcLoggingEnabled: false
     listeners:
       plain: {}
       tls:
@@ -50,8 +49,6 @@ spec:
       type: persistent-claim
       size: 100Gi
       deleteClaim: true
-    jvmOptions:
-      gcLoggingEnabled: false
   entityOperator:
     topicOperator:
       resources:
@@ -59,13 +56,9 @@ spec:
           memory: 256Mi
         limits:
           memory: 256Mi
-      jvmOptions:
-        gcLoggingEnabled: false
     userOperator:
       resources:
         requests:
           memory: 256Mi
         limits:
           memory: 256Mi
-      jvmOptions:
-        gcLoggingEnabled: false
