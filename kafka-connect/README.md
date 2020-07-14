@@ -165,8 +165,7 @@ data:
 
 ### Kafka cluster
 
-Next we have to deploy the Kafka cluster.
-It is mostly standard Kafka cluster with Kafka 2.4.0
+* Deploy Kafka 2.5.0 cluster
 
 ```bash
 oc apply -f 02-kafka.yaml
@@ -174,15 +173,14 @@ oc apply -f 02-kafka.yaml
 
 ## Deploy Kafka Connect
 
-Next we need to deploy the Kafka Connect cluster.
-It uses container image which was pre-built with the Camel Kafka connectors.
+* Deploy Kafka Connect cluster.
+Notice the custom image it uses which has the Camel Kafka connectors.
 
 ```bash
 oc apply -f 03-kafka-connect.yaml
 ```
 
-In the Kafka Connect, notice the:
-* Secrets with the AWS and Telegram credentials mounted into the Connect cluster
+* Also notice how thes ecrets with the AWS and Telegram credentials mounted into the Connect cluster:
 
 ```yaml
   externalConfiguration:
@@ -195,7 +193,7 @@ In the Kafka Connect, notice the:
           secretName: aws-credentials
 ```
 
-* The configuration provider
+* And how the configuration provider is configured:
 
 ```yaml
   config:
@@ -203,24 +201,24 @@ In the Kafka Connect, notice the:
     config.providers.file.class: org.apache.kafka.common.config.provider.FileConfigProvider
 ```
 
-This also creates topics and users used by the Kafka Connect.
-One the Kafka Connect is deployed, you can check the available connectors in its status.
-You should see `CamelSourceConnector` and `CamelSinkConnector` among them.
+* The Kafka Connect YAML also creates topics and users used by the Kafka Connect.
+One the Kafka Connect is deployed, you can check the available connectors in the `KafkaConnect` custom resource status.
+You should see the Camel connectors.
 
 ## Deploy the Telegram connector
 
-The Telegram source connector can be deployed using the KafkaConnector custom resource.
+* The Telegram source connector can be deployed using the `KafkaConnector` custom resource:
 
 ```bash
 oc apply -f 04-telegram-connector.yaml
 ```
 
-In the YAML, notice how the API token is mounted from a secret.
-Once the connector is deployed, you can check the status to see if it is running, you can go to the Telegram app and talk with the bot `@Jakubot`.
-Run receiver on a Kafka topic `telegram-topic` to see the messages sent to the bot.
+* In the YAML, notice how the API token is mounted from a secret.
+* Once the connector is deployed, you can check the status to see if it is running, you can go to the Telegram app and talk with the bot `@Jakubot`.
+* Run receiver on a Kafka topic `telegram-topic` to see the messages sent to the bot.
 
 ```bash
-kubectl run kafka-consumer -ti --image=strimzi/kafka:0.16.0-kafka-2.4.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic telegram-topic --from-beginning
+kubectl run kafka-consumer -ti --image=strimzi/kafka:0.18.0-kafka-2.5.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic telegram-topic --from-beginning
 ```
 
 or use
@@ -231,33 +229,33 @@ or use
 
 ## Deploy the Amazon AWS SQS connector
 
-Once you have the messages in a Kafka topic, you can process them.
+* Once you have the messages in a Kafka topic, you can process them.
 Or you can use a sink connector to send them somewhere else.
 In our case, we will take the messages from Telegram and send them to Amazon AWS SQS queue using the Camel Kafka sink connector.
-You can create the connector again using YAML
+* You can create the connector again using YAML:
 
 ```bash
 oc apply -f 05-sqs-connector.yaml
 ```
 
-Once the connector is running, you can send some more Telegram messages to `@Jakubot`.
+* Once the connector is running, you can send some more Telegram messages to `@Jakubot`.
 You can see them again received in Kafka, but also forwarded to the AWS SQS queue.
 
 ## Converting the data formats
 
-The key / value convertor is important to correctly convert the data which are received or sent.
+* The key / value convertor is important to correctly convert the data which are received or sent.
 We can demonstrate it on an AWS S3 example.
-First we will deploy a source connector which will read files from Amazon AWS S3 storage.
+* First we will deploy a source connector which will read files from Amazon AWS S3 storage.
 We will use StringConverters to get the text files we are going to upload as Strings.
 
 ```bash
 oc apply -f 06-s3-connector-wrong-converter.yaml
 ```
 
-Next upload a text file into S3 bucket and check how it was sent by the S3 connector.
+* Next upload a text file into S3 bucket and check how it was sent by the S3 connector.
 
 ```bash
-kubectl run kafka-consumer -ti --image=strimzi/kafka:0.16.0-kafka-2.4.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic s3-topic --from-beginning
+kubectl run kafka-consumer -ti --image=strimzi/kafka:0.18.0-kafka-2.5.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic s3-topic --from-beginning
 ```
 
 or use
@@ -266,14 +264,14 @@ or use
 ./get-s3-messages.sh
 ```
 
-We can see that it is just the Java Object.
-Now we can reconfigure the connector to use the `S3ObjectConverter`.
+* We can see that it is just the Java Object.
+* Now we can reconfigure the connector to use the `S3ObjectConverter`.
 
 ```bash
 oc apply -f 07-s3-connector-correct-converter.yaml
 ```
 
-Now we can upload another file to S3 and check the message in Kafka which should not contain the actual test.
+* Now we can upload another file to S3 and check the message in Kafka which should not contain the actual test.
 
 ```bash
 kubectl run kafka-consumer -ti --image=strimzi/kafka:0.16.0-kafka-2.4.0 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server my-cluster-kafka-bootstrap:9092 --topic s3-topic --from-beginning

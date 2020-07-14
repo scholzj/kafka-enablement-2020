@@ -5,13 +5,13 @@ metadata:
   labels:
     strimzi.io/cluster: my-connect-cluster
 spec:
-  class: org.apache.camel.kafkaconnector.CamelSinkConnector
+  class: org.apache.camel.kafkaconnector.awssqs.CamelAwssqsSinkConnector
   tasksMax: 1
   config:
     key.converter: org.apache.kafka.connect.storage.StringConverter
     value.converter: org.apache.kafka.connect.storage.StringConverter
     topics: telegram-topic
-    camel.sink.url: aws-sqs://my-queue
-    camel.component.aws-sqs.configuration.access-key: ${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws.access-key}
-    camel.component.aws-sqs.configuration.secret-key: ${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws.secret-key}
-    camel.component.aws-sqs.configuration.region: ${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws.region}
+    camel.sink.path.queueNameOrArn: my-queue
+    camel.component.aws-sqs.access-key: ${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws.access-key}
+    camel.component.aws-sqs.secret-key: ${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws.secret-key}
+    camel.component.aws-sqs.region: ${file:/opt/kafka/external-configuration/aws-credentials/aws-credentials.properties:aws.region}
