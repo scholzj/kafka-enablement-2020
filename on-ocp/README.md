@@ -94,7 +94,7 @@ oc apply -f 04-user.yaml
 
 * Check the specification of the KafkaUser resource.
 Notice the authN type, authZ and quotas configuration.
-* Check the secrets it created with the TLs certificate:
+* Check the secrets it created with the TLS certificate:
 
 ```
 oc get secret my-user -o yaml

@@ -35,7 +35,7 @@ oc apply -f 02-kafka-2.4.0.yaml
 oc apply -f 03-new-operator/
 ```
 
-* Rolling update will occur (carefull, Zookeeper will roll twice because of the TLS sidecar removal)
+* Rolling update will occur (careful, Zookeeper will roll twice because of the TLS sidecar removal)
 This is needed to make the pods use the same container images as the operator does.
 This does not change Kafka version.
 
