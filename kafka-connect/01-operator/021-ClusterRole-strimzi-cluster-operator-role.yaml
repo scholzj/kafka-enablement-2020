@@ -6,8 +6,10 @@ metadata:
     app: strimzi
 rules:
 - apiGroups:
-  - rbac.authorization.k8s.io
+  - "rbac.authorization.k8s.io"
   resources:
+  # The cluster operator needs to create and manage cluster role bindings in the case of an install where a user
+  # has specified they want their cluster role bindings generated
   - clusterrolebindings
   verbs:
   - get
@@ -19,12 +21,17 @@ rules:
 - apiGroups:
   - storage.k8s.io
   resources:
+  # The cluster operator requires "get" permissions to view storage class details
+  # This is because only a persistent volume of a supported storage class type can be resized
   - storageclasses
   verbs:
   - get
 - apiGroups:
   - ""
   resources:
+  # The cluster operator requires "list" permissions to view all nodes in a cluster
+  # The listing is used to determine the node addresses when NodePort access is configured
+  # These addresses are then exposed in the custom resource states
   - nodes
   verbs:
   - list

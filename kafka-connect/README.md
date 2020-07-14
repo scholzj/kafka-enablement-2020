@@ -1,27 +1,50 @@
 # Kafka Architecture
 
+This lab shows how to use Kafka Connect on RHEL and on OCP.
+
 ## On RHEL
 
-Setup and start the Zookeeper and Kafka cluster from the [Kafka Architecture demo](../kafka-architecture/).
-This cluster will be used for the first part of this demo. 
+### Start Zookeeper
 
-### Start Kafka Connect cluster
-
-The introduction demo showed standalone Kafka Connect.
-Now we are going to use distributed Kafka Connect with 3 worker nodes.
-Start the 3 Kafka nodes by running these 3 scripts in different terminals:
+* Open a new terminal and start Zookeeper
 
 ```
-./scripts/connect-0.sh
-./scripts/connect-1.sh
-./scripts/connect-2.sh
+./kafka-2.5.0/bin/zookeeper-server-start.sh kafka-2.5.0/config/zookeeper.properties
+```
+
+### Start Kafka broker
+
+* Open a new terminal and start Kafka broker
+
+```
+./kafka-2.5.0/bin/kafka-server-start.sh kafka-2.5.0/config/server.properties
+```
+
+* Create a topic which we will use in this demo:
+
+```
+./kafka-2.5.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 1
+```
+
+### Start Kafka Connect
+
+* The introduction demo showed standalone Kafka Connect.
+Now we are going to use distributed Kafka Connect with 3 worker nodes.
+* Edit the distributed Connect configuration file (`kafka-2.5.0/config/connect-distributed.properties`) and set the plugin path to point to our folder with Camel Kafka connectors (`./docker-image/connectors`)
+
+```
+plugin.path=./docker-image/connectors/
+```
+
+* Open a new terminal and start Kafka Connect:
+
+```
+./kafka-2.5.0/bin/connect-distributed.sh kafka-2.5.0/config/connect-distributed.properties
 ```
 
 ### Kafka Connect
 
-* Show Kafka connect configuration files
-* Show the plugin path and explain how it works
-* Show basics of the rest interface
+* Play the Kafka Connect REST interface and check that it found the Camel Kafka Connectors
 
 ```
 curl -s http://localhost:8083/ | jq
@@ -31,51 +54,58 @@ curl -s http://localhost:8083/connector-plugins | jq
 
 ### Deploy CamelSink plugin
 
-Go to [https://webhook.site/](https://webhook.site/) get a new webhook URL.
-Copy the URL and paster it in `http-sink-connector.json` into `camel.sink.url` option.
+* Go to [https://webhook.site/](https://webhook.site/) get a new webhook URL.
+* Copy the URL and paster it in `http-sink-connector.json` into `camel.sink.path.httpUri` option.
 And create the connector:
 
 ```
 curl -X POST -H "Content-Type: application/json" -d @http-sink-connector.json http://localhost:8083/connectors | jq
 ```
 
-Check the connector status:
+* Check the connector status:
 
 ```
 curl -s http://localhost:8083/connectors | jq
-curl -s http://localhost:8083/connectors/post-bin-sink | jq
-curl -s http://localhost:8083/connectors/post-bin-sink/status | jq
-curl -s http://localhost:8083/connectors/post-bin-sink/config | jq
-curl -s http://localhost:8083/connectors/post-bin-sink/tasks/ | jq
-curl -s http://localhost:8083/connectors/post-bin-sink/tasks/0/status | jq
+curl -s http://localhost:8083/connectors/http-sink | jq
+curl -s http://localhost:8083/connectors/http-sink/status | jq
+curl -s http://localhost:8083/connectors/http-sink/config | jq
+curl -s http://localhost:8083/connectors/http-sink/tasks/ | jq
+curl -s http://localhost:8083/connectors/http-sink/tasks/0/status | jq
 ```
 
 ### Send some messages
 
+* Send some messages to the my-topic topic
+
 ```
-./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic my-topic
+./kafka-2.5.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic demo
 ```
 
 ### Pausing and resuming the connector
 
+* Try to pause or resume the connector
+
 ```
-curl -X PUT http://localhost:8083/connectors/post-bin-sink/pause | jq
-curl -X PUT http://localhost:8083/connectors/post-bin-sink/resume | jq
+curl -X PUT http://localhost:8083/connectors/http-sink/pause | jq
+curl -X PUT http://localhost:8083/connectors/http-sink/resume | jq
 ```
 
 ### Restarting connector or task
 
+* Try to restart a connector or its task
+
 ```
-curl -X POST http://localhost:8083/connectors/post-bin-sink/restart | jq
-curl -X POST http://localhost:8083/connectors/post-bin-sink/tasks/0/restart | jq
+curl -X POST http://localhost:8083/connectors/http-sink/restart | jq
+curl -X POST http://localhost:8083/connectors/http-sink/tasks/0/restart | jq
 ```
 
 ### Delete the connector
 
-```
-curl -X DELETE http://localhost:8083/connectors/post-bin-sink | jq
-```
+* Delete the connector
 
+```
+curl -X DELETE http://localhost:8083/connectors/http-sink | jq
+```
 
 ## On OCP
 

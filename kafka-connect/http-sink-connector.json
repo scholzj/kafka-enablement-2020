@@ -1,11 +1,11 @@
 { 
-    "name": "post-bin-sink", 
+    "name": "http-sink", 
     "config": { 
-        "connector.class": "org.apache.camel.kafkaconnector.CamelSinkConnector", 
+        "connector.class": "org.apache.camel.kafkaconnector.https.CamelHttpsSinkConnector", 
         "tasks.max": "1", 
         "key.converter": "org.apache.kafka.connect.storage.StringConverter",
         "value.converter": "org.apache.kafka.connect.storage.StringConverter",
-        "camel.sink.url": "https://webhook.site/3e7ed629-5998-4a36-af28-0c1821e73e22",
-        "topics": "my-topic"
+        "camel.sink.path.httpUri": "webhook.site/deb138bb-9862-464d-a2cb-101694c5695f",
+        "topics": "demo"
     } 
 }
