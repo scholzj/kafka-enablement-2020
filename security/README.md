@@ -24,8 +24,8 @@ oc apply -f ./02-keycloak.yaml
 * Create the internal and external realms in Keycloak / RH-SSO
 
 ```
-oc apply -f ./03-keycloak-realm-internal.yaml
-oc apply -f ./04-keycloak-realm-external.yaml
+oc apply -f ./03-keycloak-realm-external.yaml
+oc apply -f ./04-keycloak-realm-internal.yaml
 ```
 
 * You can login to the Keycloak / RH-SSO UI console and check that the realms were created _(username and password can be found in the secret named `credential-keycloak`)_
