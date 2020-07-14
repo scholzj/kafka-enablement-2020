@@ -6,7 +6,7 @@ metadata:
   labels:
     app: my-mirror-maker-2
 spec:
-  version: 2.4.0
+  version: 2.5.0
   replicas: 1
   connectCluster: "us"
   clusters:
@@ -32,6 +32,7 @@ spec:
     checkpointConnector:
       config:
         checkpoints.topic.replication.factor: 1
+        emit.checkpoints.interval.seconds: 5
     topicsPattern: ".*"
     groupsPattern: ".*"
   resources:
