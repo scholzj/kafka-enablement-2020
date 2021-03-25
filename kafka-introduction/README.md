@@ -8,7 +8,7 @@
 ./kafka-2.5.0/bin/zookeeper-server-start.sh ./kafka-2.5.0/config/zookeeper.properties
 ```
 
-## Start Kafka
+## Start Kafka
 
 * Next we can start Kafka:
 
