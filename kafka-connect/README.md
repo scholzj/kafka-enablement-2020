@@ -26,7 +26,7 @@ This lab shows how to use Kafka Connect on RHEL and on OCP.
 ./kafka-2.5.0/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic demo --partitions 3 --replication-factor 1
 ```
 
-### Start Kafka Connect
+### Start Kafka Connect
 
 * The introduction demo showed standalone Kafka Connect.
 Now we are going to use distributed Kafka Connect with 3 worker nodes.
